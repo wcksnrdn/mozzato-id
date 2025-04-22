@@ -24,3 +24,11 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.nav-top {
+  @apply py-4 bg-transparent transition-all duration-200;
+}
+
+.nav-scrolled {
+  @apply py-2 backdrop-blur-md bg-white/50 shadow-lg transition-all duration-200;
+}

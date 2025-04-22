@@ -31,6 +31,7 @@ interface OrderOptionProps {
 }
 
 interface ProductImageProps {
+  description: boolean;
   src: string;
   alt: string;
 }
@@ -58,9 +59,12 @@ const TiktokIcon: React.FC<{ size?: number; className?: string }> = ({ size = 24
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [scrolled, setScrolled] = useState<boolean>(false);
+  const [scrolled] = useState<boolean>(false);
   const [showOrderOptions, setShowOrderOptions] = useState<boolean>(false);
-  const [activeSlide, setActiveSlide] = useState<number>(0);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [touchStart, setTouchStart] = useState<number>(0);
+  const navRef = useRef<HTMLElement | null>(null);
   const modalRef = useRef<HTMLDivElement>(null);
   const slideshowInterval = useRef<NodeJS.Timeout | null>(null);
 
@@ -69,17 +73,37 @@ const Navbar: React.FC = () => {
 
   // Sample product images for slideshow
   const productImages: ProductImageProps[] = [
-    { src: "/mozattooriginal.png", alt: "Mozatto Cheese Bread" },
-    { src: "/mozattocoklat.png", alt: "Mozatto Chocolate Bread" },
-    { src: "/mozattotiramisu.png", alt: "Mozatto Tiramisu Bread" },
+    {
+      src: "/mozattooriginal.png", alt: "Mozatto Cheese Bread",
+      description: false
+    },
+    {
+      src: "/mozattocoklat.png", alt: "Mozatto Chocolate Bread",
+      description: false
+    },
+    {
+      src: "/mozattotiramisu.png", alt: "Mozatto Tiramisu Bread",
+      description: false
+    },
   ];
 
   useEffect(() => {
-    const handleScroll = (): void => {
-      setScrolled(window.scrollY > 10);
+    const handleScroll = () => {
+      const offset = window.scrollY;
+      if (navRef.current) {
+        if (offset > 10) {
+          navRef.current.classList.add('nav-scrolled');
+          navRef.current.classList.remove('nav-top');
+        } else {
+          navRef.current.classList.remove('nav-scrolled');
+          navRef.current.classList.add('nav-top');
+        }
+      }
     };
-    
+
     window.addEventListener('scroll', handleScroll);
+    handleScroll();
+
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
@@ -154,6 +178,28 @@ const Navbar: React.FC = () => {
     goToSlide(activeSlide === 0 ? productImages.length - 1 : activeSlide - 1);
   };
 
+  const toggleExpand = () => {
+    setIsExpanded(!isExpanded);
+  };
+
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+      setTouchStart(e.touches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    const touchEnd = e.touches[0].clientX;
+    const diff = touchStart - touchEnd;
+  
+    if (Math.abs(diff) > 50) {
+      if (diff > 0) {
+        nextSlide();
+      } else {
+        prevSlide();
+      }
+      setTouchStart(touchEnd);
+    }
+  };
+
   // Opsi pemesanan dengan icon dari Lucide
   const orderOptions: OrderOptionProps[] = [
     {
@@ -173,7 +219,7 @@ const Navbar: React.FC = () => {
       color: "text-green-500",
       gradient: "from-green-500/10 to-green-400/30",
       link: "https://gofood.co.id/jakarta/restaurant/mozatto-5b9a34aa-11f9-4fb9-8303-b5a5fb379585",
-      description: "Bebas ongkir hingga 10km"
+      description: "Free Shipping Up To 10KM"
     },
     {
       name: "ShopeeFood",
@@ -192,7 +238,7 @@ const Navbar: React.FC = () => {
       color: "text-orange-500",
       gradient: "from-orange-500/10 to-orange-400/30",
       link: "https://shopee.co.id/mozatto346",
-      description: "Diskon 20% untuk pengguna baru"
+      description: "Discount 20% for New Users"
     },
     {
       name: "GrabFood",
@@ -211,7 +257,7 @@ const Navbar: React.FC = () => {
       color: "text-green-600",
       gradient: "from-green-600/10 to-green-500/30",
       link: "https://food.grab.com/id/en/restaurant/mozatto-pancoran-mas-depok-delivery/",
-      description: "Gratis ongkir untuk pembelian pertama"
+      description: "Free Shipping for First Order"
     },
     {
         name: "WhatsApp",
@@ -230,7 +276,7 @@ const Navbar: React.FC = () => {
         color: "text-green-500",
         gradient: "from-green-500/10 to-green-400/30",
         link: "https://wa.me/6281929014069?text=Halo%20Mimo!%20Saya%20ingin%20memesan%20Potato%20Cheese%20Breadnya!",
-        description: "Pesan langsung via chat"
+        description: "Order Directly via WhatsApp"
       },      
     {
       name: "Instagram",
@@ -249,7 +295,7 @@ const Navbar: React.FC = () => {
       color: "text-pink-600",
       gradient: "from-pink-600/10 to-pink-400/30",
       link: "https://instagram.com/mozatto.id",
-      description: "DM kami untuk pemesanan khusus"
+      description: "DM Us for Special Orders"
     },
     {
       name: "TikTok",
@@ -268,14 +314,16 @@ const Navbar: React.FC = () => {
       color: "text-black",
       gradient: "from-gray-700/10 to-gray-900/30",
       link: "https://tiktok.com/@mozatto.id",
-      description: "Lihat video produk kami"
+      description: "Look Up for Our Latest Videos"
     }
   ];
   
 
   return (
     <>
-      <nav className={`fixed w-full z-40 transition-all duration-300 ${
+      <nav 
+      ref={navRef}
+      className={`fixed w-full z-40 transition-all duration-200 will-change-[backdrop-filter,transform] ${
         scrolled 
           ? 'py-2 backdrop-blur-md bg-white/50 shadow-lg' 
           : 'py-4 bg-transparent'
@@ -297,12 +345,11 @@ const Navbar: React.FC = () => {
                   />
                 </div>
                 <div className="flex flex-col justify-center">
-                  <h1 className="text-3xl font-extrabold bg-gradient-to-r from-orange-600 via-yellow-500 to-orange-400 bg-clip-text text-transparent hidden sm:block leading-tight" style={{ fontFamily: "'poppins', sans-serif"}}>
+                  <h1 className="text-2xl font-extrabold bg-gradient-to-r from-orange-600 via-yellow-500 to-orange-400 bg-clip-text text-transparent hidden sm:block leading-tight" style={{ fontFamily: "'poppins', sans-serif"}}>
                     Mozatto
                   </h1>
                   <div className="flex items-center space-x-1 hidden sm:flex">
-                    <span className="text-sm italic text-orange-500 font-medium" style={{ fontFamily: "'poppins', sans-serif"}}>Molor Terus Kejunya!</span>
-                    <span className="animate-bounce text-yellow-500">✨</span>
+                    <span className="text-[10px] italic text-orange-500 font-medium" style={{ fontFamily: "'poppins', sans-serif"}}>Stay Cheesy, Stretch Easy!</span>
                   </div>
                 </div>
               </Link>
@@ -311,12 +358,12 @@ const Navbar: React.FC = () => {
             {/* Navigation - Centered with rounded background */}
             <div className="hidden md:flex justify-center items-center">
               <div className="bg-orange-50 bg-opacity-85 backdrop-blur-sm rounded-full px-2 py-1 shadow-md border border-orange-100">
-                <div className="flex" style={{ fontFamily: "'poppins', sans-serif"}}>
+                <div className="flex text-sm" style={{ fontFamily: "'poppins', sans-serif"}}>
                   <NavLink href="/" icon={<Home size={18} />} text="Home" />
-                  <NavLink href="/produk" icon={<Cake size={18} />} text="Produk" />
-                  <NavLink href="/tentang-kami" icon={<Users size={18} />} text="Tentang Kami" />
-                  <NavLink href="/testimoni" icon={<MessageCircle size={18} />} text="Testimoni" />
-                  <NavLink href="/kontak" icon={<PhoneCall size={18} />} text="Kontak" />
+                  <NavLink href="/produk" icon={<Cake size={18} />} text="Product" />
+                  <NavLink href="/tentang-kami" icon={<Users size={18} />} text="About Us" />
+                  <NavLink href="/testimoni" icon={<MessageCircle size={18} />} text="Testimonial" />
+                  <NavLink href="/kontak" icon={<PhoneCall size={18} />} text="Contact" />
                 </div>
               </div>
             </div>
@@ -329,7 +376,7 @@ const Navbar: React.FC = () => {
               >
                 <span className="absolute inset-0 bg-white opacity-0 group-hover:opacity-10 transition-opacity duration-300"></span>
                 <ShoppingBag size={16} strokeWidth={2.5} className="transform group-hover:rotate-12 transition-transform duration-300" />
-                <span className="hidden sm:inline font-semibold" style={{ fontFamily: "'poppins', sans-serif"}}>Pesan Sekarang</span>
+                <span className="hidden sm:inline font-semibold" style={{ fontFamily: "'poppins', sans-serif"}}>Order Now</span>
               </button>
               
               {/* Mobile Menu Toggle */}
@@ -345,14 +392,14 @@ const Navbar: React.FC = () => {
 
           {/* Mobile Menu */}
           <div className={`md:hidden transition-all duration-300 ease-in-out overflow-hidden ${
-            isOpen ? 'max-h-96 opacity-100 mt-4' : 'max-h-0 opacity-0'
+            isOpen ? 'max-h-110 backdrop-blur-md opacity-100 mt-4' : 'max-h-0 opacity-0'
           }`}>
-            <div className="bg-white/90 backdrop-blur-md rounded-2xl shadow-xl p-4 space-y-1 border border-orange-100">
+            <div className="bg-white backdrop-blur-md rounded-2xl p-4 space-y-1 border border-orange-100">
               <MobileNavLink href="/" icon={<Home size={18} />} text="Home" onClick={toggleMenu} />
-              <MobileNavLink href="/produk" icon={<Cake size={18} />} text="Produk" onClick={toggleMenu} />
-              <MobileNavLink href="/tentang-kami" icon={<Users size={18} />} text="Tentang Kami" onClick={toggleMenu} />
-              <MobileNavLink href="/testimoni" icon={<MessageCircle size={18} />} text="Testimoni" onClick={toggleMenu} />
-              <MobileNavLink href="/kontak" icon={<PhoneCall size={18} />} text="Kontak" onClick={toggleMenu} />
+              <MobileNavLink href="/produk" icon={<Cake size={18} />} text="Product" onClick={toggleMenu} />
+              <MobileNavLink href="/tentang-kami" icon={<Users size={18} />} text="About Us" onClick={toggleMenu} />
+              <MobileNavLink href="/testimoni" icon={<MessageCircle size={18} />} text="Testimonial" onClick={toggleMenu} />
+              <MobileNavLink href="/kontak" icon={<PhoneCall size={18} />} text="Contact" onClick={toggleMenu} />
               
               <div className="pt-2 mt-2 border-t border-orange-100">
                 <button
@@ -363,7 +410,7 @@ const Navbar: React.FC = () => {
                   className="flex items-center justify-center gap-2 w-full py-3 bg-gradient-to-br from-orange-500 to-yellow-500 text-white rounded-xl font-medium shadow-md hover:shadow-lg transition-all duration-200"
                 >
                   <ShoppingBag size={18} />
-                  <span>Pesan Sekarang</span>
+                  <span>Order Now</span>
                 </button>
               </div>
             </div>
@@ -372,61 +419,110 @@ const Navbar: React.FC = () => {
       </nav>
 
       {/* Product Slideshow - Desktop Only */}
-      <div className="hidden md:block fixed top-28 right-4 z-30 w-64 h-40 rounded-2xl shadow-lg overflow-hidden">
-        <div className="relative w-full h-full">
-          {/* Slides */}
-          {productImages.map((image, index) => (
-            <div 
-              key={index}
-              className={`absolute inset-0 transition-opacity duration-500 ${
-                index === activeSlide ? 'opacity-100' : 'opacity-0'
-              }`}
-            >
-              <div className="relative w-full h-full">
-                <Image
-                  src={image.src}
-                  alt={image.alt}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex flex-col justify-end p-3">
-                  <p className="text-white text-sm font-medium mb-[10px]" style={{ fontFamily: "'poppins', sans-serif"}} >{image.alt}</p>
-                </div>
+      <div 
+      className={`transition-all duration-500 ease-in-out ${
+        isExpanded 
+          ? "fixed inset-0 z-50 flex items-center justify-center bg-black/80" 
+          : "hidden md:block fixed top-28 right-4 z-30 w-64 h-40 rounded-2xl shadow-lg overflow-hidden"
+      }`}
+    >
+      <div 
+        className={`relative ${
+          isExpanded ? "w-4/5 h-4/5 max-w-4xl max-h-4xl" : "w-full h-full"
+        } bg-gray-900 rounded-2xl overflow-hidden`}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+      >
+        {/* Slides */}
+        {productImages.map((image, index) => (
+          <div 
+            key={index}
+            className={`absolute inset-0 transition-all duration-700 ${
+              index === activeSlide 
+                ? 'opacity-100 translate-x-0 scale-100' 
+                : index < activeSlide 
+                  ? 'opacity-0 -translate-x-full scale-95' 
+                  : 'opacity-0 translate-x-full scale-95'
+            }`}
+          >
+            <div className="relative w-full h-full">
+              <Image
+                src={image.src}
+                alt={image.alt}
+                fill
+                className="object-cover"
+                priority={index === activeSlide}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent flex flex-col justify-end p-4">
+                <p className="text-white font-medium mb-1 text-sm md:text-base">{image.alt}</p>
+                {isExpanded && image.description && (
+                  <p className="text-gray-200 text-xs md:text-sm">{image.description}</p>
+                )}
               </div>
             </div>
-          ))}
-
-          {/* Navigation Arrows */}
-          <button 
-            onClick={prevSlide}
-            className="absolute top-1/2 left-2 -translate-y-1/2 p-1 rounded-full bg-white/30 backdrop-blur-sm text-white hover:bg-white/50 transition-all"
-          >
-            <ChevronLeft size={16} />
-          </button>
-          <button 
-            onClick={nextSlide}
-            className="absolute top-1/2 right-2 -translate-y-1/2 p-1 rounded-full bg-white/30 backdrop-blur-sm text-white hover:bg-white/50 transition-all"
-          >
-            <ChevronRight size={16} />
-          </button>
-
-          {/* Dots Indicator */}
-          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex space-x-1">
-            {productImages.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`w-1.5 h-1.5 rounded-full transition-all ${
-                  index === activeSlide 
-                    ? 'bg-white w-3' 
-                    : 'bg-white/50 hover:bg-white/70'
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
           </div>
+        ))}
+
+        {/* Controls */}
+        <div className={`absolute ${isExpanded ? "top-4 right-4" : "top-2 right-2"} flex space-x-2`}>
+          <button 
+            onClick={toggleExpand}
+            className="p-1.5 rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/40 transition-all cursor-pointer"
+            aria-label={isExpanded ? "Close expanded view" : "Expand slideshow"}
+          >
+            {isExpanded ? <X size={14} /> : (
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+              </svg>
+            )}
+          </button>
+        </div>
+
+        {/* Navigation Arrows */}
+        <button 
+          onClick={prevSlide}
+          className={`absolute top-1/2 left-3 -translate-y-1/2 p-2 cursor-pointer rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/40 transition-all ${
+            isExpanded ? "opacity-70 hover:opacity-100" : ""
+          }`}
+          aria-label="Previous slide"
+        >
+          <ChevronLeft size={isExpanded ? 24 : 16} />
+        </button>
+        <button 
+          onClick={nextSlide}
+          className={`absolute top-1/2 right-3 -translate-y-1/2 p-2 cursor-pointer rounded-full bg-white/20 backdrop-blur-sm text-white hover:bg-white/40 transition-all ${
+            isExpanded ? "opacity-70 hover:opacity-100" : ""
+          }`}
+          aria-label="Next slide"
+        >
+          <ChevronRight size={isExpanded ? 24 : 16} />
+        </button>
+
+        {/* Dots Indicator */}
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex space-x-1.5">
+          {productImages.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => goToSlide(index)}
+              className={`h-1.5 rounded-full transition-all ${
+                index === activeSlide 
+                  ? 'bg-white w-6' 
+                  : 'bg-white/40 w-1.5 hover:bg-white/70'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* Current slide indicator */}
+        <div className="absolute top-3 left-3 bg-black/40 backdrop-blur-sm rounded-full px-2 py-0.5 text-xs text-white font-medium">
+          {activeSlide + 1} / {productImages.length}
         </div>
       </div>
+    </div>
 
       {/* Enhanced Order Options Modal */}
       <div className={`fixed inset-0 z-50 flex items-center justify-center transition-all duration-200 ${
@@ -461,7 +557,7 @@ const Navbar: React.FC = () => {
                     Mozatto
                   </h3>
                   <p className="bg-gradient-to-r from-orange-600 via-yellow-500 to-orange-400 bg-clip-text text-transparent text-sm" style={{ fontFamily: "'poppins', sans-serif"}}>
-                    Pilih cara pemesanan favorit Anda
+                    Choose Your Favorite Ordering Method
                   </p>
                 </div>
               </div>
@@ -503,7 +599,7 @@ const Navbar: React.FC = () => {
                   
                   {/* Order Button */}
                   <div className={`mt-auto flex items-center justify-center space-x-1 text-xs font-medium ${option.color} opacity-70 group-hover:opacity-100 transition-all`}>
-                    <span>Pesan</span>
+                    <span>Order</span>
                     <ArrowRight size={12} />
                   </div>
                   
@@ -545,7 +641,7 @@ const Navbar: React.FC = () => {
                   Mozatto
                 </h3>
                 <p className="text-gray-500 text-xs">
-                  Molor Terus Kejunya!
+                  Stay Cheesy, Stretch Easy!
                 </p>
               </div>
             </div>
@@ -558,7 +654,7 @@ const Navbar: React.FC = () => {
           </div>
           
           <div className="px-5 pb-8">
-            <h4 className="text-sm font-medium text-gray-500 mb-3">PILIH METODE PEMESANAN</h4>
+            <h4 className="text-sm font-medium text-gray-500 mb-3">Choose Ordering Method</h4>
             
             <div className="space-y-3">
               {orderOptions.map((option, index) => (
@@ -591,23 +687,6 @@ const Navbar: React.FC = () => {
                   </div>
                 </a>
               ))}
-            </div>
-            
-            {/* Promo Banner */}
-            <div className="mt-5 bg-orange-50 rounded-xl p-4 border border-orange-100">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-orange-500/10 rounded-full text-orange-500">
-                  <ShoppingBag size={18} />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-orange-800" style={{ fontFamily: "'poppins', sans-serif"}}>
-                    Promo Spesial!
-                  </p>
-                  <p className="text-xs text-orange-600">
-                    Gratis 1 roti untuk pembelian 5 roti
-                  </p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
