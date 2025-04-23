@@ -62,15 +62,28 @@ export default function MozattoHeroSection() {
               <span className="absolute -bottom-1 left-0 w-full h-1 bg-amber-500 rounded-full"></span>
             </span> 
             <br />
-            <span className="relative">
-              Bread
-              <svg className="absolute -bottom-2 left-0 w-full h-3" viewBox="0 0 200 8">
-                <path d="M0,5 Q50,0 100,5 T200,5" fill="none" stroke="#d97706" strokeWidth="4" strokeLinecap="round" />
-              </svg>
-              <span style={{ fontFamily: 'cursive', fontSize: '1.25rem', marginLeft: '0.5rem', color: '#92400e' }}>by Mozatto</span>
+            <span className="relative inline-block">
+            Bread
+            <svg
+              className="absolute -bottom-1 left-0 w-full h-4 pointer-events-none"
+              viewBox="0 0 200 10"
+              preserveAspectRatio="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M0,8 Q100,0 200,8"
+                fill="none"
+                stroke="#d97706"
+                strokeWidth="4"
+                strokeLinecap="round"
+              />
+            </svg>
+            <span className="font-[cursive] text-xl ml-2 text-amber-800">
+              by Mozatto
             </span>
+          </span>
           </h1>
-            <p className="mt-4 text-lg text-amber-700 max-w-xl">
+            <p className="mt-8 text-lg text-amber-700 max-w-xl">
               Made with the finest ingredients, each bite delivers a luxurious taste experience.
             </p>
 
@@ -111,18 +124,19 @@ export default function MozattoHeroSection() {
           
           {/* Feature badges */}
           <div className="flex flex-wrap gap-3 pt-4">
-            <div className="badge">
-              <Coffee className="w-4 h-4 mr-1" />
-              <span>Freshly Baked</span>
-            </div>
-            <div className="badge">
-              <Star className="w-4 h-4 mr-1" />
-              <span>Premium Cheese</span>
-            </div>
-            <div className="badge">
-              <Award className="w-4 h-4 mr-1" />
-              <span>Best Seller</span>
-            </div>
+            {[
+              { icon: <Coffee className="w-4 h-4" />, label: 'Freshly Baked' },
+              { icon: <Star className="w-4 h-4" />, label: 'Premium Cheese' },
+              { icon: <Award className="w-4 h-4" />, label: 'Best Seller' },
+            ].map((item, index) => (
+              <div
+                key={index}
+                className="flex items-center gap-2 px-3 py-1.5 bg-yellow-50 text-yellow-900 text-sm font-medium rounded-full shadow-sm hover:bg-yellow-100 transition duration-200"
+              >
+                {item.icon}
+                <span>{item.label}</span>
+              </div>
+            ))}
           </div>
         </div>
         
@@ -228,86 +242,6 @@ export default function MozattoHeroSection() {
         </div>
       </div>
       <style jsx>{`
-      .animated-text {
-        animation: colorPulse 3s infinite;
-        will-change: color;
-      }
-
-      @keyframes colorPulse {
-        0%, 100% { color: #92400e; }
-        50% { color: #d97706; }
-      }
-
-      .badge {
-        display: flex;
-        align-items: center;
-        background-color: rgba(255, 255, 255, 0.7);
-        backdrop-filter: blur(4px);
-        padding: 0.5rem 0.75rem;
-        border-radius: 0.5rem;
-        font-size: 0.75rem;
-        font-weight: 500;
-        color: #92400e;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-      }
-
-      .wave-container {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        overflow: hidden;
-      }
-
-      .wave {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 200%;
-        height: 100%;
-        background-image: linear-gradient(to bottom, rgba(251, 191, 36, 0.1) 50%, rgba(251, 191, 36, 0));
-        border-radius: 50% 50% 0 0;
-        will-change: transform;
-        backface-visibility: hidden;
-        transform: translateZ(0);
-      }
-
-      .wave1 {
-        animation: wave 20s linear infinite;
-        animation-delay: 0s;
-        z-index: 1;
-        opacity: 0.3;
-        bottom: -10%;
-        border-radius: 60% 40% 0 0;
-      }
-
-      .wave2 {
-        animation: wave 15s linear infinite;
-        animation-delay: 5s;
-        z-index: 2;
-        opacity: 0.2;
-        bottom: -5%;
-        border-radius: 40% 60% 0 0;
-      }
-
-      .wave3 {
-        animation: wave 30s linear infinite;
-        animation-delay: 10s;
-        z-index: 3;
-        opacity: 0.1;
-        bottom: -15%;
-        border-radius: 70% 30% 0 0;
-      }
-
-      @keyframes wave {
-        0% { transform: translateX(0) translateZ(0) rotate(0); }
-        50% { transform: translateX(-25%) translateZ(0) rotate(3deg); }
-        100% { transform: translateX(-50%) translateZ(0) rotate(0); }
-      }
-
-      .particle {
-        animation: float-random 6s linear infinite;
-        will-change: transform;
-      }
 
       @keyframes float-random {
         0% { transform: translateY(0) translateX(0); }

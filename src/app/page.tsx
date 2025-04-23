@@ -2,6 +2,7 @@
 import Navbar from "@/components/navbar/Navbar";
 import Hero from "@/components/hero/Hero";
 import FeaturedProductsSection from "@/components/featuredproducts/FeaturedProducts";
+import WhyChooseUs from "@/components/whychooseus/WhyChooseUs";
 
 export const metadata = {
   title: "Mozatto",
@@ -15,6 +16,8 @@ export default function Home() {
       <Navbar />
       <Hero />
       <FeaturedProductsSection />
+      <WhyChooseUs />
+      {/* Add more sections as needed */}
     </main>
   );
 }
