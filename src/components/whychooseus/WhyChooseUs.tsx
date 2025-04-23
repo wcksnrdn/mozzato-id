@@ -69,7 +69,7 @@ export default function WhyChooseUs() {
       icon: <Clock className="text-amber-700" size={28} />,
       title: "Fresh Daily",
       description: "Every loaf is baked fresh throughout the day, ensuring you always experience our bread at the peak of its flavor and texture.",
-      imageSrc: "/api/placeholder/600/400",
+      imageSrc: "/whychooseussectionimages/freshdaily.png",
       imageAlt: "Freshly baked potato cheese bread"
     },
     {
