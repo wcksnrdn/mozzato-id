@@ -4,6 +4,8 @@ import Hero from "@/components/hero/Hero";
 import FeaturedProductsSection from "@/components/featuredproducts/FeaturedProducts";
 import WhyChooseUs from "@/components/whychooseus/WhyChooseUs";
 import TestimonialSection from "@/components/testimonial/Testimonial";
+import FAQSection from "@/components/faq/Faq";
+import Footer from "@/components/footer/Footer";
 
 export const metadata = {
   title: "Mozatto",
@@ -19,6 +21,8 @@ export default function Home() {
       <FeaturedProductsSection />
       <WhyChooseUs />
       <TestimonialSection />
+      <FAQSection />
+      <Footer />
     </main>
   );
 }

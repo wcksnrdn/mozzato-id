@@ -30,6 +30,9 @@ export const metadata: Metadata = {
   },
   description:
     "Mozzato brings you the best potato cheese bread in town — soft, fluffy, cheesy, and irresistible. Stay Cheesy, Stretch Easy!",
+  icons: {
+      icon: "/favicon.ico",
+  },
   keywords: [
     "Mozzato",
     "cheese bread",

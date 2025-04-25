@@ -76,16 +76,16 @@ export default function WhyChooseUs() {
       icon: <Star className="text-amber-700" size={28} />,
       title: "Customer Favorite",
       description: "Join thousands of loyal customers who make our potato cheese bread a part of their daily ritual. One taste and you'll understand why.",
-      imageSrc: "/api/placeholder/600/400",
+      imageSrc: "/whychooseussectionimages/customersfavorit.png",
       imageAlt: "Happy customers enjoying potato cheese bread"
     }
   ];
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden py-24 bg-amber-50">
+    <section ref={sectionRef} className="relative overflow-hidden py-24 bg-amber-50" style={{ fontFamily: "'poppins', sans-serif" }}>
       {/* Background Design Elements */}
       <div className="absolute top-0 left-0 w-full h-full overflow-hidden pointer-events-none">
-        <div className="absolute -top-24 -left-24 w-64 h-64 rounded-full bg-amber-200 opacity-20 blur-xl"></div>
+        <div className="absolute top-50 -left-10 w-64 h-64 rounded-full bg-amber-200 opacity-50 blur-xl"></div>
         <div className="absolute top-1/2 -right-12 w-40 h-40 rounded-full bg-amber-300 opacity-20 blur-lg"></div>
         <div className="absolute -bottom-20 left-1/3 w-52 h-52 rounded-full bg-amber-100 opacity-25 blur-xl"></div>
         
@@ -105,11 +105,16 @@ export default function WhyChooseUs() {
       <div className="container mx-auto px-4 relative z-10">
         {/* Heading with animated underline */}
         <div className="text-center mb-16">
-          <h2 className="inline-block text-4xl md:text-5xl font-bold text-amber-900 mb-4 relative">
-            Why Choose Mozatto
-            <span className={`absolute bottom-0 left-0 w-full h-1 bg-amber-500 ${isInView ? 'animate-expand-from-center' : ''}`}
-                  style={{animation: isInView ? 'expandFromCenter 1.5s ease forwards' : ''}}></span>
-          </h2>
+        <h2 className="inline-block text-3xl md:text-5xl font-bold text-amber-900 mb-4 relative">
+            Why Choose{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-yellow-400 to-amber-700 drop-shadow-md font-extrabold">
+                Mozatto
+            </span>
+            <span
+                className={`absolute -bottom-2 left-0 w-full h-1 bg-amber-500 ${isInView ? 'animate-expand-from-center' : ''}`}
+                style={{ animation: isInView ? 'expandFromCenter 1.5s ease forwards' : '' }}
+            ></span>
+            </h2>
           <p className="text-amber-700 text-lg max-w-2xl mx-auto">
             We elevate the humble potato bread to a gourmet experience that captivates your taste buds
           </p>
@@ -193,7 +198,7 @@ export default function WhyChooseUs() {
               <div className="relative">
                 <div className="absolute inset-0 bg-amber-500 rounded-lg transform rotate-3"></div>
                 <img 
-                  src="/api/placeholder/500/300" 
+                  src="/whychooseussectionimages/excellent.png" 
                   alt="Our signature potato cheese bread" 
                   className="relative z-10 rounded-lg shadow-lg border-4 border-white"
                 />

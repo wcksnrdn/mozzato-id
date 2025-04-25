@@ -26,7 +26,7 @@ export default function MozattoHeroSection() {
   }, [productGallery.length]);
   
   return (
-    <div className="relative w-full min-h-screen bg-gradient-to-br from-amber-50 via-amber-100 to-amber-50 z-10">
+    <div className="relative w-full min-h-screen bg-gradient-to-t from-amber-50 via-amber-100 to-amber-50 z-10">
       {/* Animated wave background */}
       <div className="absolute inset-0 z-0 opacity-30">
         <div className="wave-container">
@@ -45,7 +45,7 @@ export default function MozattoHeroSection() {
       </div>
 
       {/* Main content */}
-      <div className="container mx-auto md:mt-0 py-7 md:py-26 px-4 h-full flex flex-col md:flex-row items-center justify-center relative z-10" style={{ fontFamily: "'poppins', sans-serif" }}>
+      <div className="container mx-auto md:mt-0 top-15 md:top-0 py-7 md:py-26 px-4 h-full flex flex-col md:flex-row items-center justify-center relative z-10" style={{ fontFamily: "'poppins', sans-serif" }}>
         {/* Left side - Text content */}
         <div className={`w-full md:w-1/2 space-y-6 mb-12 md:mb-0 transition-all duration-1000 transform ${isVisible ? 'translate-x-0 opacity-100' : '-translate-x-12 opacity-0'}`}>
           <div className="inline-block bg-gradient-to-r from-amber-100 to-amber-200 px-4 py-2 rounded-full shadow-md">
@@ -65,7 +65,7 @@ export default function MozattoHeroSection() {
             <span className="relative inline-block">
             Bread
             <svg
-              className="absolute -bottom-1 left-0 w-full h-4 pointer-events-none"
+              className="absolute -bottom-4 left-0 w-full h-4 pointer-events-none"
               viewBox="0 0 200 10"
               preserveAspectRatio="none"
               xmlns="http://www.w3.org/2000/svg"

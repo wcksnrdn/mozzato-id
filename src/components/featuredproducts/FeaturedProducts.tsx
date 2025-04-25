@@ -57,7 +57,7 @@ export default function FeaturedProductsSection() {
   }, []);
   
   return (
-    <section id="featured-products-section" className="relative py-20 overflow-hidden bg-gradient-to-t from-amber-50 to-white">
+    <section id="featured-products-section" className="relative py-20 overflow-hidden bg-gradient-to-t from-amber-50 via-amber-100 to-amber-50">
       {/* Background decorative elements */}
       <div className="absolute inset-0 overflow-hidden z-0">
         {/* Decorative circles */}
