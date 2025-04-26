@@ -8,6 +8,7 @@ import {
   Sparkles, Award, Cookie, Utensils, Info
 } from 'lucide-react';
 import Navbar from '@/components/navbar/Navbar';
+import Head from 'next/head';
 
 export default function ProductPage() {
   // Product data
@@ -18,7 +19,7 @@ export default function ProductPage() {
       description: "Perpaduan kentang premium dan keju cheddar yang lembut, dipanggang hingga keemasan sempurna. Tekstur yang renyah di luar dan lembut di dalam menciptakan harmoni rasa yang tak terlupakan.",
       price: "Rp 25.000",
       ingredients: ["Kentang Premium", "Keju Cheddar", "Tepung Terigu", "Mentega Kualitas Tinggi", "Garam Himalaya", "Rempah Rahasia"],
-      image: "/api/placeholder/500/400",
+      image: "/productpageimages/cisbretoriginal.png",
       rating: 4.8,
       featured: true,
       reviews: 128,
@@ -30,7 +31,7 @@ export default function ProductPage() {
       description: "Sensasi pedas yang menyegarkan dengan campuran cabai pilihan dan keju mozzarella yang meleleh. Setiap gigitan menawarkan ledakan rasa pedas yang meninggalkan kesan mendalam.",
       price: "Rp 28.000",
       ingredients: ["Kentang Premium", "Keju Mozzarella", "Cabai Merah", "Cabai Rawit", "Tepung Terigu", "Mentega", "Garam"],
-      image: "/api/placeholder/500/400",
+      image: "/productpageimages/cisbretcoklat.png",
       rating: 4.6,
       reviews: 94,
       newItem: true
@@ -41,7 +42,7 @@ export default function ProductPage() {
       description: "Aroma bawang putih yang menggoda dengan paduan tiga jenis keju pilihan. Kombinasi bawang putih panggang dan keju berkualitas tinggi menciptakan cita rasa yang kaya dan kompleks.",
       price: "Rp 30.000",
       ingredients: ["Kentang Premium", "Keju Cheddar", "Keju Mozzarella", "Keju Parmesan", "Bawang Putih Panggang", "Tepung Terigu", "Mentega", "Garam"],
-      image: "/api/placeholder/500/400",
+      image: "/productpageimages/cisbrettiramisu.png",
       rating: 4.9,
       reviews: 156,
       popular: true
@@ -62,6 +63,11 @@ export default function ProductPage() {
   const [activeSection, setActiveSection] = useState('ingredients');
   const [showMobileNav, setShowMobileNav] = useState(false);
   const productSectionRef = useRef<HTMLDivElement | null>(null);
+
+  useEffect(() => {
+    document.title = `Mozatto - Product | ${selectedProduct.name}`;
+  }, [selectedProduct]);
+
 
   useEffect(() => {
     setIsVisible(true);
@@ -143,6 +149,15 @@ export default function ProductPage() {
   };
 
   return (
+    <>
+    <Head>
+        <title>Mozatto | {selectedProduct.name}</title>
+        <meta name="description" content={selectedProduct.description} />
+        <meta property="og:title" content={`Mozatto | ${selectedProduct.name}`} />
+        <meta property="og:description" content={selectedProduct.description} />
+        <meta name="twitter:title" content={`Mozatto | ${selectedProduct.name}`} />
+        <meta name="twitter:description" content={selectedProduct.description} />
+      </Head>
     <div className="relative min-h-screen bg-gradient-to-b from-amber-50 to-amber-100 overflow-hidden" style={{ fontFamily: "'poppins', sans-serif" }}>
         <Navbar />
       {/* Decorative background elements */}
@@ -213,7 +228,7 @@ export default function ProductPage() {
 
                 {/* Potato Cheese Bread */}
                 <span className="inline-block relative">
-                    <span className="relative z-10 text-3xl bottom-4">Potato Cheese Bread</span>
+                    <span className="relative z-10 text-3xl md:text-5xl text-amber-600 bottom-4">Potato Cheese Bread</span>
                     <svg
                     className="absolute -bottom-1 left-0 w-full h-4 pointer-events-none"
                     viewBox="0 0 200 10"
@@ -525,23 +540,6 @@ export default function ProductPage() {
                   className="mt-8 flex flex-col sm:flex-row justify-between items-center"
                 >
                   <div className="text-2xl font-bold text-amber-800 mb-4 sm:mb-0">{selectedProduct.price}</div>
-                  <div className="flex gap-3">
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-6 rounded-lg flex items-center shadow-md"
-                    >
-                      <ShoppingBag size={18} className="mr-2" />
-                      Add to Cart
-                    </motion.button>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="bg-white border-2 border-amber-500 text-amber-600 hover:bg-amber-50 font-bold py-3 px-3 rounded-lg flex items-center shadow-sm"
-                    >
-                      <Heart size={20} />
-                    </motion.button>
-                  </div>
                 </motion.div>
               )}
             </div>
@@ -880,5 +878,6 @@ export default function ProductPage() {
         </div>
       </div>
     </div>
+    </>
   );
 }

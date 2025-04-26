@@ -360,10 +360,10 @@ const Navbar: React.FC = () => {
               <div className="bg-orange-50 bg-opacity-85 backdrop-blur-sm rounded-full px-2 py-1 shadow-md border border-orange-100">
                 <div className="flex text-sm" style={{ fontFamily: "'poppins', sans-serif"}}>
                   <NavLink href="/" icon={<Home size={18} />} text="Home" />
-                  <NavLink href="/produk" icon={<Cake size={18} />} text="Product" />
-                  <NavLink href="/tentang-kami" icon={<Users size={18} />} text="About Us" />
-                  <NavLink href="/testimoni" icon={<MessageCircle size={18} />} text="Testimonial" />
-                  <NavLink href="/kontak" icon={<PhoneCall size={18} />} text="Contact" />
+                  <NavLink href="/product" icon={<Cake size={18} />} text="Product" />
+                  <NavLink href="/about-us" icon={<Users size={18} />} text="About Us" />
+                  <NavLink href="/testimonial" icon={<MessageCircle size={18} />} text="Testimonial" />
+                  <NavLink href="/contact" icon={<PhoneCall size={18} />} text="Contact" />
                 </div>
               </div>
             </div>
@@ -396,10 +396,10 @@ const Navbar: React.FC = () => {
           }`}>
             <div className="bg-white backdrop-blur-md rounded-2xl p-4 space-y-1 border border-orange-100">
               <MobileNavLink href="/" icon={<Home size={18} />} text="Home" onClick={toggleMenu} />
-              <MobileNavLink href="/produk" icon={<Cake size={18} />} text="Product" onClick={toggleMenu} />
-              <MobileNavLink href="/tentang-kami" icon={<Users size={18} />} text="About Us" onClick={toggleMenu} />
-              <MobileNavLink href="/testimoni" icon={<MessageCircle size={18} />} text="Testimonial" onClick={toggleMenu} />
-              <MobileNavLink href="/kontak" icon={<PhoneCall size={18} />} text="Contact" onClick={toggleMenu} />
+              <MobileNavLink href="/product" icon={<Cake size={18} />} text="Product" onClick={toggleMenu} />
+              <MobileNavLink href="/about-us" icon={<Users size={18} />} text="About Us" onClick={toggleMenu} />
+              <MobileNavLink href="/testimonial" icon={<MessageCircle size={18} />} text="Testimonial" onClick={toggleMenu} />
+              <MobileNavLink href="/contact" icon={<PhoneCall size={18} />} text="Contact" onClick={toggleMenu} />
               
               <div className="pt-2 mt-2 border-t border-orange-100">
                 <button
