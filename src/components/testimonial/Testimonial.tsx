@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image'; 
 
 export default function TestimonialSection() {
   const [activeIndex, setActiveIndex] = useState(0);
@@ -10,8 +11,8 @@ export default function TestimonialSection() {
   const [isInView, setIsInView] = useState(false);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Setup intersection observer
   useEffect(() => {
+    const sectionElement = sectionRef.current; // Store the current ref value in a variable
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -20,28 +21,17 @@ export default function TestimonialSection() {
       },
       { threshold: 0.2 }
     );
-
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+  
+    if (sectionElement) {
+      observer.observe(sectionElement);
     }
-
+  
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (sectionElement) {
+        observer.unobserve(sectionElement); // Use the stable variable here
       }
     };
-  }, []);
-
-  // Auto-rotate testimonials when not hovering
-  useEffect(() => {
-    if (isHovering || !isInView) return;
-    
-    const interval = setInterval(() => {
-      setActiveIndex(prev => (prev + 1) % testimonials.length);
-    }, 5000);
-    
-    return () => clearInterval(interval);
-  }, [isHovering, isInView]);
+  }, []);  
 
   // Track mouse position for parallax effect
   const handleMouseMove = (e: { clientX: number; clientY: number; }) => {
@@ -67,45 +57,57 @@ export default function TestimonialSection() {
     },
     {
       id: 2,
-      name: "Michael Chen",
-      role: "Restaurant Owner",
+      name: "Elcarvyna Zahir",
+      role: "Active Student",
       quote: "As someone who's sampled bread worldwide, I can confidently say Mozatto's potato cheese bread stands among the best. Its complex flavor profile and perfect texture make it exceptional.",
       rating: 5,
-      imageSrc: "/api/placeholder/400/400",
-      socialHandle: "@cheftaste",
-      location: "New York, NY"
+      imageSrc: "/testimonialsectionimages/elcarvy.png",
+      socialHandle: "@elcarvy_",
+      location: "Jakarta, Indonesia"
     },
     {
       id: 3,
-      name: "Emma Rodriguez",
-      role: "Home Cook",
+      name: "Sintia Pratiwi",
+      role: "Active Student",
       quote: "My family fights over the last piece of Mozatto's potato cheese bread! The subtle herb notes and the way the cheese creates these pockets of flavor is absolutely incredible.",
       rating: 5,
-      imageSrc: "/api/placeholder/400/400",
-      socialHandle: "@emmacooks",
-      location: "Chicago, IL"
+      imageSrc: "/testimonialsectionimages/sintia.png",
+      socialHandle: "@sinprtw_",
+      location: "Jawa Barat, Indonesia"
     },
     {
       id: 4,
-      name: "David Park",
-      role: "Culinary Student",
+      name: "Adrian Firmansyah",
+      role: "Active Student",
       quote: "Studying baking techniques, I'm amazed by Mozatto's potato cheese bread. The hydration level and fermentation are perfectly balanced, creating an unmatched texture and flavor.",
       rating: 5,
-      imageSrc: "/api/placeholder/400/400",
-      socialHandle: "@futurechef",
-      location: "San Francisco, CA"
+      imageSrc: "/testimonialsectionimages/adrian.png",
+      socialHandle: "@adri.frmn",
+      location: "Jakarta, Indonesia"
     },
     {
       id: 5,
-      name: "Olivia Thompson",
-      role: "Food Critic",
+      name: "Najla Aristy",
+      role: "Manufacturing Associate",
       quote: "In a world of ordinary breads, Mozatto's potato cheese creation stands as an artisanal masterpiece. The umami notes from the potato combined with premium cheese creates a symphony of flavors.",
       rating: 5,
-      imageSrc: "/api/placeholder/400/400",
-      socialHandle: "@oliviataste",
-      location: "Austin, TX"
+      imageSrc: "/testimonialsectionimages/najla.png",
+      socialHandle: "@najlaristy",
+      location: "Jawa Barat, Indonesia"
     }
   ];
+
+  // Auto-rotate testimonials when not hovering
+  useEffect(() => {
+    if (isHovering || !isInView) return;
+    
+    const interval = setInterval(() => {
+      setActiveIndex(prev => (prev + 1) % testimonials.length);
+    }, 5000);
+    
+    return () => clearInterval(interval);
+  }, [isHovering, isInView, testimonials.length]); // Add testimonials.length to the dependency array  
+
 
   // Calculate transformations for 3D carousel effect
   const calculateCardStyle = (index: number) => {
@@ -113,28 +115,24 @@ export default function TestimonialSection() {
     let transform = '';
     let opacity = 0;
     let zIndex = 0;
-    let scale = 0.8;
     
     if (diff === 0) {
       // Active card
       transform = 'translateX(0) scale(1)';
       opacity = 1;
       zIndex = 3;
-      scale = 1;
     } else if (diff === 1 || diff === testimonials.length - 1) {
       // Cards to the sides
       const direction = diff === 1 ? 1 : -1;
       transform = `translateX(${direction * 70}%) scale(0.85)`;
       opacity = 0.7;
       zIndex = 2;
-      scale = 0.85;
     } else {
       // Further cards
       const direction = diff < testimonials.length / 2 ? 1 : -1;
       transform = `translateX(${direction * 120}%) scale(0.7)`;
       opacity = 0.4;
       zIndex = 1;
-      scale = 0.7;
     }
     
     // Add parallax effect based on mouse position when hovering
@@ -203,7 +201,7 @@ export default function TestimonialSection() {
           </div>
           
           <p className={`max-w-xl mx-auto text-amber-700 transition-all duration-1000 delay-500 ${isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
-            Discover why our potato cheese bread has created a community of passionate fans who can't get enough of our signature creation.
+            Discover why our potato cheese bread has created a community of passionate fans who can&apos;t get enough of our signature creation.
           </p>
         </div>
         
@@ -230,9 +228,11 @@ export default function TestimonialSection() {
                     <div className="absolute bottom-0 right-6 transform translate-y-1/2">
                       <div className="relative">
                         <div className="absolute inset-0 rounded-full bg-amber-200 blur-md opacity-20 scale-110"></div>
-                        <img 
+                        <Image 
                           src={testimonial.imageSrc} 
                           alt={testimonial.name}
+                          width={200}
+                          height={300}
                           className="w-20 h-20 rounded-full border-4 border-white -mt-24 object-cover shadow-lg z-50"
                         />
                       </div>
@@ -306,11 +306,11 @@ export default function TestimonialSection() {
         {/* Call to action */}
         <div className={`mt-16 text-center transition-all duration-1000 delay-700 ${isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
           <h3 className="text-2xl font-bold text-amber-800 mb-4">Ready to Experience the Mozatto Difference?</h3>
-          <p className="text-amber-700 mb-6 max-w-2xl mx-auto">Join thousands of satisfied customers who've made our potato cheese bread part of their daily lives.</p>
+          <p className="text-amber-700 mb-6 max-w-2xl mx-auto">Join thousands of satisfied customers who&apos;ve made our potato cheese bread part of their daily lives.</p>
           
-          <button className="bg-amber-600 hover:bg-amber-700 text-white font-medium py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
+          <a href="/contact-us" className="bg-amber-600 hover:bg-amber-700 text-white font-medium py-3 px-8 rounded-full shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-1">
             Try Our Potato Cheese Bread Today
-          </button>
+          </a>
         </div>
       </div>
       

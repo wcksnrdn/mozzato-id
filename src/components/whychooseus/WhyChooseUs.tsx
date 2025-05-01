@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from 'react';
+import Image from 'next/image';
 import { ChefHat, Award, Shield, Clock, Sparkles, Star } from 'lucide-react';
 
 export default function WhyChooseUs() {
@@ -8,19 +9,9 @@ export default function WhyChooseUs() {
   const [isInView, setIsInView] = useState(false);
   const sectionRef = useRef(null);
   
-  // Auto-rotate through cards
   useEffect(() => {
-    if (!isInView) return;
-    
-    const interval = setInterval(() => {
-      setActiveCard(prev => (prev + 1) % features.length);
-    }, 4000);
-    
-    return () => clearInterval(interval);
-  }, [isInView]);
+    const sectionElement = sectionRef.current;  // Store the ref value in a variable
   
-  // Intersection observer for animations
-  useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -31,17 +22,17 @@ export default function WhyChooseUs() {
       },
       { threshold: 0.2 }
     );
-    
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+  
+    if (sectionElement) {
+      observer.observe(sectionElement);  // Observe using the local variable
     }
-    
+  
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (sectionElement) {
+        observer.unobserve(sectionElement);  // Use the variable in cleanup
       }
     };
-  }, []);
+  }, []);  
 
   const features = [
     {
@@ -80,6 +71,17 @@ export default function WhyChooseUs() {
       imageAlt: "Happy customers enjoying potato cheese bread"
     }
   ];
+
+  useEffect(() => {
+    if (!isInView) return;
+    
+    const interval = setInterval(() => {
+      setActiveCard(prev => (prev + 1) % features.length);
+    }, 4000);
+    
+    return () => clearInterval(interval);
+  }, [isInView, features.length]); // Add features.length to the dependency array  
+  
 
   return (
     <section ref={sectionRef} className="relative overflow-hidden py-24 bg-amber-50" style={{ fontFamily: "'poppins', sans-serif" }}>
@@ -169,9 +171,11 @@ export default function WhyChooseUs() {
                     activeCard === idx ? 'opacity-100 z-10' : 'opacity-0 z-0'
                   }`}
                 >
-                  <img 
+                  <Image 
                     src={feature.imageSrc} 
                     alt={feature.imageAlt}
+                    width={200}
+                    height={300}
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-amber-900/70 to-transparent flex items-end">
@@ -197,9 +201,11 @@ export default function WhyChooseUs() {
             <div className="w-full md:w-1/2 flex-shrink-0">
               <div className="relative">
                 <div className="absolute inset-0 bg-amber-500 rounded-lg transform rotate-3"></div>
-                <img 
+                <Image
                   src="/whychooseussectionimages/excellent.png" 
                   alt="Our signature potato cheese bread" 
+                  width={600}
+                  height={300}
                   className="relative z-10 rounded-lg shadow-lg border-4 border-white"
                 />
                 <div className="absolute -bottom-4 -right-4 bg-amber-800 text-white rounded-full p-4 shadow-lg border-2 border-white">
@@ -213,16 +219,16 @@ export default function WhyChooseUs() {
               <p className="text-amber-800 mb-6">Our passion for perfect potato cheese bread is evident in every bite. We invite you to taste the difference that premium ingredients, artisanal craftsmanship, and a genuine love for baking can make.</p>
               
               <div className="flex flex-wrap gap-4">
-                <button className="bg-amber-700 hover:bg-amber-800 text-white rounded-full px-6 py-3 shadow-lg transition-all hover:shadow-xl hover:translate-y-px flex items-center gap-2">
+                <a href="/contact-us" className="bg-amber-700 hover:bg-amber-800 text-white rounded-full px-6 py-3 shadow-lg transition-all hover:shadow-xl hover:translate-y-px flex items-center gap-2">
                   <span>Order Now</span>
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                     <path d="M5 12h14M12 5l7 7-7 7" />
                   </svg>
-                </button>
+                </a>
                 
-                <button className="bg-white hover:bg-amber-50 text-amber-700 border border-amber-300 rounded-full px-6 py-3 shadow-lg transition-all hover:shadow-xl hover:translate-y-px">
+                <a href="/about-us" className="bg-white hover:bg-amber-50 text-amber-700 border border-amber-300 rounded-full px-6 py-3 shadow-lg transition-all hover:shadow-xl hover:translate-y-px">
                   Learn Our Story
-                </button>
+                </a>
               </div>
             </div>
           </div>

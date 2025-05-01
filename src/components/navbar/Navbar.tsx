@@ -4,8 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState, useEffect, useRef } from 'react';
 import { 
-  Menu, X, ShoppingBag, Home, Cake, Users, 
-  MessageCircle, PhoneCall, Instagram, Send, 
+  Menu, X, ShoppingBag, Home, Cake, Users, PhoneCall, Instagram, Send, 
   X as XIcon, ChevronRight, ChevronLeft, ArrowRight, ShoppingCart, Truck
 } from 'lucide-react';
 
@@ -256,7 +255,7 @@ const Navbar: React.FC = () => {
       icon: <Truck size={20} />,
       color: "text-green-600",
       gradient: "from-green-600/10 to-green-500/30",
-      link: "https://food.grab.com/id/en/restaurant/mozatto-pancoran-mas-depok-delivery/",
+      link: "https://food.grab.com/id/en/restaurant/mozatto-pancoran-mas-depok-delivery/6-C7AWGBAHTLCGRX",
       description: "Free Shipping for First Order"
     },
     {
@@ -283,7 +282,7 @@ const Navbar: React.FC = () => {
       logo: (
         <div className="bg-white rounded-full p-1 h-8 w-8 flex items-center justify-center">
           <Image 
-            src="/instagram.png"
+            src="/instagramnew.png"
             alt="Instagram"
             width={24}
             height={24}
@@ -362,8 +361,7 @@ const Navbar: React.FC = () => {
                   <NavLink href="/" icon={<Home size={18} />} text="Home" />
                   <NavLink href="/product" icon={<Cake size={18} />} text="Product" />
                   <NavLink href="/about-us" icon={<Users size={18} />} text="About Us" />
-                  <NavLink href="/testimonial" icon={<MessageCircle size={18} />} text="Testimonial" />
-                  <NavLink href="/contact" icon={<PhoneCall size={18} />} text="Contact" />
+                  <NavLink href="/contact-us" icon={<PhoneCall size={18} />} text="Contact" />
                 </div>
               </div>
             </div>
@@ -398,8 +396,7 @@ const Navbar: React.FC = () => {
               <MobileNavLink href="/" icon={<Home size={18} />} text="Home" onClick={toggleMenu} />
               <MobileNavLink href="/product" icon={<Cake size={18} />} text="Product" onClick={toggleMenu} />
               <MobileNavLink href="/about-us" icon={<Users size={18} />} text="About Us" onClick={toggleMenu} />
-              <MobileNavLink href="/testimonial" icon={<MessageCircle size={18} />} text="Testimonial" onClick={toggleMenu} />
-              <MobileNavLink href="/contact" icon={<PhoneCall size={18} />} text="Contact" onClick={toggleMenu} />
+              <MobileNavLink href="/contact-us" icon={<PhoneCall size={18} />} text="Contact" onClick={toggleMenu} />
               
               <div className="pt-2 mt-2 border-t border-orange-100">
                 <button

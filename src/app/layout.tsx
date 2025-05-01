@@ -116,9 +116,7 @@ export default function RootLayout({
         <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
         <link rel="manifest" href="/site.webmanifest" />
       </head>
-      <body
-        className={`${geistSans.variable} ${poppins.variable} ${geistMono.variable} antialiased bg-white text-black`}
-      >
+      <body className={`${geistSans.variable} ${poppins.variable} ${geistMono.variable} ...`}>
         {children}
       </body>
     </html>

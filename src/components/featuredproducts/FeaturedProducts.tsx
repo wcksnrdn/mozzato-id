@@ -14,7 +14,7 @@ export default function FeaturedProductsSection() {
       name: "Classic Potato Cheese Bread",
       description: "Roti kentang original dengan keju premium yang lembut dan gurih",
       price: "Rp 13.000",
-      rating: 5,
+      rating: 4.9,
       image: "/featuredsectionimages/cisbretoriginal.png",
       badge: "Classic"
     },
@@ -29,11 +29,11 @@ export default function FeaturedProductsSection() {
     },
     {
       id: 3,
-      name: "Sweet Potato Deluxe",
+      name: "Chocolate Potato Cheese Bread",
       description: "Paduan sempurna antara ubi ungu dan keju yang lembut di setiap gigitan",
-      price: "Rp 30.000",
-      rating: 4.8,
-      image: "bg-amber-300",
+      price: "Rp 13.000",
+      rating: 4.9,
+      image: "/featuredsectionimages/cisbretcoklat2.png",
       badge: null
     }
   ];
@@ -124,20 +124,24 @@ export default function FeaturedProductsSection() {
                 <p className="text-amber-700 text-sm mb-4">{product.description}</p>
                 
                 {/* Rating */}
-                <div className="flex items-center mb-4">
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
+              <div className="flex items-center mb-4">
+                <div className="flex">
+                  {[...Array(5)].map((_, i) => {
+                    const isFullStar = i < Math.floor(product.rating);
+                    const isHalfStar = i === Math.floor(product.rating) && product.rating % 1 >= 0.5;
+                    return (
                       <Star 
                         key={i} 
-                        className={`w-4 h-4 ${i < Math.floor(product.rating) ? 'text-amber-500 fill-amber-500' : 'text-gray-300'}`} 
+                        className={`w-4 h-4 ${isFullStar ? 'text-amber-500 fill-amber-500' : isHalfStar ? 'text-amber-500 fill-none' : 'text-gray-300'}`} 
                       />
-                    ))}
-                  </div>
-                  <span className="ml-2 text-xs text-amber-700">{product.rating}</span>
+                    );
+                  })}
                 </div>
+                <span className="ml-2 text-xs text-amber-700">{product.rating}</span>
+              </div>
                 
                 {/* Button */}
-                <a href="/products" className="inline-flex items-center text-amber-800 font-medium text-sm hover:text-amber-600 transition-colors group">
+                <a href="/product" className="inline-flex items-center text-amber-800 font-medium text-sm hover:text-amber-600 transition-colors group">
                   View Details
                   <ChevronRight className="ml-1 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </a>
@@ -149,7 +153,7 @@ export default function FeaturedProductsSection() {
         {/* View All Products button */}
         <div className={`text-center mt-12 transition-all duration-700 delay-500 transform ${isVisible ? 'translate-y-0 opacity-100' : 'translate-y-12 opacity-0'}`}>
           <a 
-            href="/products" 
+            href="/product" 
             className="inline-flex items-center px-8 py-4 bg-amber-100 text-amber-800 rounded-lg font-medium hover:bg-amber-200 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1"
           >
             View All Products

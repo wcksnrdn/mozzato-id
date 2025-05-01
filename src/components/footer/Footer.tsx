@@ -1,7 +1,9 @@
 "use client";
 
 import { useState, useRef } from 'react';
-import { Facebook, Instagram, Twitter, Linkedin, Youtube, ArrowRight, MapPin, Phone, Mail, ExternalLink, ChevronUp } from 'lucide-react';
+import { Instagram, ArrowRight, MapPin, Phone, Mail, ExternalLink } from 'lucide-react';
+import { faTiktok } from '@fortawesome/free-brands-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 export default function Footer() {
   const [email, setEmail] = useState('');
@@ -23,13 +25,6 @@ export default function Footer() {
     setTimeout(() => {
       setSubscribeStatus(null);
     }, 3000);
-  };
-  
-  const scrollToTop = () => {
-    window.scrollTo({
-      top: 0,
-      behavior: 'smooth'
-    });
   };
 
   const currentYear = new Date().getFullYear();
@@ -57,24 +52,18 @@ export default function Footer() {
           {/* Logo and tagline */}
           <div className="max-w-sm">
             <div className="mb-6">
-              <span className="text-3xl font-bold text-amber-200">MOZATTO</span>
+              <span className="text-3xl font-[cursive] font-bold text-amber-200">Mozatto</span>
               <div className="h-1 w-12 bg-amber-500 mt-2"></div>
             </div>
             <p className="mb-6 text-amber-200/80 leading-relaxed">
-              Crafting the perfect potato cheese bread since 1985. Our artisanal bread combines the finest ingredients with traditional baking techniques for an unforgettable experience.
+              Crafting the perfect potato cheese bread since 2025. Our artisanal bread combines the finest ingredients with traditional baking techniques for an unforgettable experience.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors" aria-label="Facebook">
-                <Facebook size={20} />
-              </a>
-              <a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors" aria-label="Instagram">
+              <a href="https://instagram.com/mozatto.id" className="text-amber-200/70 hover:text-amber-200 transition-colors" aria-label="Instagram">
                 <Instagram size={20} />
               </a>
-              <a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors" aria-label="Twitter">
-                <Twitter size={20} />
-              </a>
-              <a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors" aria-label="YouTube">
-                <Youtube size={20} />
+              <a href="https://www.tiktok.com/@mozatto.id" className="text-amber-200/70 hover:text-amber-200 transition-colors" aria-label="Tiktok">
+                <FontAwesomeIcon icon={faTiktok}/>
               </a>
             </div>
           </div>
@@ -124,12 +113,9 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-semibold text-amber-100 mb-4">Our Products</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors">Original Potato Cheese</a></li>
-              <li><a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors">Garlic & Herb</a></li>
-              <li><a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors">Jalapeno Cheddar</a></li>
-              <li><a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors">Rosemary Olive</a></li>
-              <li><a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors">Gift Boxes</a></li>
-              <li><a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors">Monthly Subscription</a></li>
+              <li><p className="text-amber-200/70 hover:text-amber-200 transition-colors">Original Potato Cheese Bread</p></li>
+              <li><p className="text-amber-200/70 hover:text-amber-200 transition-colors">Chocolate Potato Cheese Bread</p></li>
+              <li><p className="text-amber-200/70 hover:text-amber-200 transition-colors">Tiramissu Potato Cheese Bread</p></li>
             </ul>
           </div>
           
@@ -138,12 +124,8 @@ export default function Footer() {
             <h4 className="text-lg font-semibold text-amber-100 mb-4">Company</h4>
             <ul className="space-y-2">
               <li><a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors">About Us</a></li>
-              <li><a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors">Our Story</a></li>
-              <li><a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors">Blog</a></li>
-              <li><a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors">Press</a></li>
-              <li><a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors">Careers</a></li>
               <li>
-                <a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors flex items-center">
+                <a href="/product" className="text-amber-200/70 hover:text-amber-200 transition-colors flex items-center">
                   Wholesale <ExternalLink size={12} className="ml-1" />
                 </a>
               </li>
@@ -154,12 +136,11 @@ export default function Footer() {
           <div>
             <h4 className="text-lg font-semibold text-amber-100 mb-4">Support</h4>
             <ul className="space-y-2">
-              <li><a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors">FAQs</a></li>
-              <li><a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors">Contact Us</a></li>
-              <li><a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors">Shipping Policy</a></li>
-              <li><a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors">Returns & Refunds</a></li>
-              <li><a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors">Privacy Policy</a></li>
-              <li><a href="#" className="text-amber-200/70 hover:text-amber-200 transition-colors">Terms of Service</a></li>
+              <li><a href="/contact-us" className="text-amber-200/70 hover:text-amber-200 transition-colors">Contact Us</a></li>
+              <li><a href="/shipping-policy" className="text-amber-200/70 hover:text-amber-200 transition-colors">Shipping Policy</a></li>
+              <li><a href="/returnsandrefunds" className="text-amber-200/70 hover:text-amber-200 transition-colors">Returns & Refunds</a></li>
+              <li><a href="/privacy-policy" className="text-amber-200/70 hover:text-amber-200 transition-colors">Privacy Policy</a></li>
+              <li><a href="/terms-of-service" className="text-amber-200/70 hover:text-amber-200 transition-colors">Terms of Service</a></li>
             </ul>
           </div>
           
@@ -169,18 +150,19 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start">
                 <MapPin size={18} className="mr-2 text-amber-400 shrink-0 mt-1" />
-                <span className="text-amber-200/70">123 Bakery Lane, Bread District, San Francisco, CA 94107</span>
+                <span className="text-amber-200/70">Jl. Pramuka I
+                Mampang, Pancoran Mas, Depok City, West Java 16433</span>
               </li>
               <li className="flex items-center">
                 <Phone size={18} className="mr-2 text-amber-400 shrink-0" />
-                <a href="tel:+14155552671" className="text-amber-200/70 hover:text-amber-200 transition-colors">
-                  (415) 555-2671
+                <a href="https://wa.me/6281929014069" className="text-amber-200/70 hover:text-amber-200 transition-colors">
+                  (62) 819 2901 4069
                 </a>
               </li>
               <li className="flex items-center">
                 <Mail size={18} className="mr-2 text-amber-400 shrink-0" />
-                <a href="mailto:hello@mozatto.com" className="text-amber-200/70 hover:text-amber-200 transition-colors">
-                  hello@mozatto.com
+                <a href="mailto:mozattocisbred@gmail.com" className="text-amber-200/70 hover:text-amber-200 transition-colors">
+                  mozattocisbred@gmail.com
                 </a>
               </li>
             </ul>
@@ -213,17 +195,15 @@ export default function Footer() {
           </div>
           
           <div className="flex flex-wrap justify-center gap-6 text-sm text-amber-200/60">
-            <a href="#" className="hover:text-amber-200 transition-colors">Privacy</a>
-            <a href="#" className="hover:text-amber-200 transition-colors">Terms</a>
-            <a href="#" className="hover:text-amber-200 transition-colors">Cookies</a>
-            <a href="#" className="hover:text-amber-200 transition-colors">Accessibility</a>
-            <a href="#" className="hover:text-amber-200 transition-colors">Sitemap</a>
+            <a href="/privacy-policy" className="hover:text-amber-200 transition-colors">Privacy</a>
+            <a href="/terms-of-service" className="hover:text-amber-200 transition-colors">Terms</a>
+            <a href="/privacy-policy" className="hover:text-amber-200 transition-colors">Cookies</a>
           </div>
           
           <div className="text-amber-200/60 text-sm flex items-center">
             <span>Made with</span>
             <span className="mx-1 text-amber-500">♥</span>
-            <span>in San Francisco</span>
+            <span>in West Java, Indonesia</span>
           </div>
         </div>
       </div>

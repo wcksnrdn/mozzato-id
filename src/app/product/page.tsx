@@ -2,66 +2,67 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import Image from 'next/image';
 import { 
   Sandwich, Pizza, ChevronRight, ShoppingBag, 
-  Clock, Flame, Star, Lock, Heart, ChevronDown, 
+  Clock, Flame, Star, Lock, Heart,
   Sparkles, Award, Cookie, Utensils, Info
 } from 'lucide-react';
 import Navbar from '@/components/navbar/Navbar';
 import Head from 'next/head';
+import Footer from '@/components/footer/Footer';
 
 export default function ProductPage() {
   // Product data
   const products = [
     {
       id: 1,
-      name: "Classic Potato Cheese",
-      description: "Perpaduan kentang premium dan keju cheddar yang lembut, dipanggang hingga keemasan sempurna. Tekstur yang renyah di luar dan lembut di dalam menciptakan harmoni rasa yang tak terlupakan.",
-      price: "Rp 25.000",
-      ingredients: ["Kentang Premium", "Keju Cheddar", "Tepung Terigu", "Mentega Kualitas Tinggi", "Garam Himalaya", "Rempah Rahasia"],
+      name: "Classic Potato Cheese Bread",
+      description: "A delightful combination of premium potatoes and smooth cheddar cheese, baked to a perfect golden brown. The crispy exterior and soft, fluffy interior create a harmonious flavor that’s simply unforgettable.",
+      price: "Rp 13,000",
+      ingredients: ["Premium Potatoes", "Cheddar Cheese", "Wheat Flour", "High-Quality Butter", "Salt", "Yeast"],
       image: "/productpageimages/cisbretoriginal.png",
-      rating: 4.8,
+      rating: 4.9,
       featured: true,
       reviews: 128,
-      bestseller: true
-    },
+      bestseller: false
+    },    
     {
       id: 2,
-      name: "Spicy Mozatto",
-      description: "Sensasi pedas yang menyegarkan dengan campuran cabai pilihan dan keju mozzarella yang meleleh. Setiap gigitan menawarkan ledakan rasa pedas yang meninggalkan kesan mendalam.",
-      price: "Rp 28.000",
-      ingredients: ["Kentang Premium", "Keju Mozzarella", "Cabai Merah", "Cabai Rawit", "Tepung Terigu", "Mentega", "Garam"],
-      image: "/productpageimages/cisbretcoklat.png",
-      rating: 4.6,
+      name: "Chocolate Potato Cheese Bread",
+      description: "A unique blend of premium potatoes, smooth mozzarella cheese, and a hint of chocolate sweetness, all baked together for a deliciously surprising treat. The perfect balance of savory and sweet in every bite.",
+      price: "Rp 13,000",
+      ingredients: ["Premium Potatoes", "Mozzarella Cheese", "Chocolate", "Wheat Flour", "Butter", "Salt"],
+      image: "/productpageimages/cisbretcoklat2.png",
+      rating: 4.9,
       reviews: 94,
-      newItem: true
-    },
+      newItem: false,
+      bestseller: true
+    },    
     {
       id: 3,
-      name: "Garlic Cheese Delight",
-      description: "Aroma bawang putih yang menggoda dengan paduan tiga jenis keju pilihan. Kombinasi bawang putih panggang dan keju berkualitas tinggi menciptakan cita rasa yang kaya dan kompleks.",
-      price: "Rp 30.000",
-      ingredients: ["Kentang Premium", "Keju Cheddar", "Keju Mozzarella", "Keju Parmesan", "Bawang Putih Panggang", "Tepung Terigu", "Mentega", "Garam"],
+      name: "Tiramissu Potato Cheese Bread",
+      description: "A savory delight featuring a rich blend of roasted garlic and three types of premium cheeses. The combination of smooth mozzarella, sharp parmesan, and creamy cheddar, with the hint of garlic, creates a deep and complex flavor experience.",
+      price: "Rp 13,000",
+      ingredients: ["Premium Potatoes", "Cheddar Cheese", "Mozzarella Cheese", "Parmesan Cheese", "Roasted Garlic", "Wheat Flour", "Butter", "Salt"],
       image: "/productpageimages/cisbrettiramisu.png",
       rating: 4.9,
       reviews: 156,
       popular: true
-    },
+    },    
     {
       id: 4,
       name: "Secret Recipe",
-      description: "Rahasia terbaru dari Mozatto! Inovasi rasa yang akan segera diungkapkan untuk pecinta potato cheese bread. Tunggu kejutan lezat kami selanjutnya!",
+      description: "Mozatto's latest secret innovation! A delicious new twist on the potato cheese bread, coming soon with an exciting blend of flavors. Stay tuned for the delicious surprise!",
       price: "Coming Soon",
-      ingredients: ["???", "???", "???", "???", "???"],
+      ingredients: ["To Be Revealed", "To Be Revealed", "To Be Revealed", "To Be Revealed", "To Be Revealed"],
       image: "/api/placeholder/500/400",
       isSecret: true
-    }
+    }    
   ];
 
   const [selectedProduct, setSelectedProduct] = useState(products[0]);
-  const [isVisible, setIsVisible] = useState(false);
   const [activeSection, setActiveSection] = useState('ingredients');
-  const [showMobileNav, setShowMobileNav] = useState(false);
   const productSectionRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
@@ -70,7 +71,6 @@ export default function ProductPage() {
 
 
   useEffect(() => {
-    setIsVisible(true);
     
     // Add intersection observer for animations
     const observer = new IntersectionObserver(
@@ -228,7 +228,7 @@ export default function ProductPage() {
 
                 {/* Potato Cheese Bread */}
                 <span className="inline-block relative">
-                    <span className="relative z-10 text-3xl md:text-5xl text-amber-600 bottom-4">Potato Cheese Bread</span>
+                    <span className="relative z-10 text-3xl md:text-5xl text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-yellow-400 to-amber-700 drop-shadow-md font-extrabold bottom-4">Potato Cheese Bread</span>
                     <svg
                     className="absolute -bottom-1 left-0 w-full h-4 pointer-events-none"
                     viewBox="0 0 200 10"
@@ -272,14 +272,15 @@ export default function ProductPage() {
               <ShoppingBag size={18} className="mr-2" />
               See The Product
             </motion.button>
-            <motion.button
+            <motion.a
+              href="/about-us"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
               className="bg-white border-2 border-amber-600 cursor-pointer text-amber-600 hover:bg-amber-50 font-bold py-3 px-8 rounded-lg shadow-md flex items-center justify-center w-full sm:w-auto"
             >
               <Info size={18} className="mr-2" />
               About Us
-            </motion.button>
+            </motion.a>
           </motion.div>
           
           {/* Floating badges */}
@@ -333,7 +334,7 @@ export default function ProductPage() {
               variants={textReveal}
               className="text-3xl md:text-4xl font-bold text-amber-800 text-center mb-3"
             >
-              Our Signature Products
+              Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-yellow-400 to-amber-700 drop-shadow-md font-extrabold">Signature</span> Products
             </motion.h2>
             <motion.div
               variants={fadeIn}
@@ -355,9 +356,11 @@ export default function ProductPage() {
                   onClick={() => setSelectedProduct(product)}
                 >
                   <div className="relative h-48 md:h-52 lg:h-56 overflow-hidden">
-                    <img 
+                    <Image
                       src={product.image} 
                       alt={product.name} 
+                      width={200}
+                      height={300}
                       className="w-full h-full object-cover transition-transform duration-700 hover:scale-110"
                     />
                     
@@ -426,13 +429,15 @@ export default function ProductPage() {
                     {!product.isSecret && (
                       <div className="flex items-center mt-2">
                         <div className="flex">
-                          {[...Array(5)].map((_, i) => (
-                            <Star 
-                              key={i} 
-                              size={14} 
-                              className={i < Math.floor(product.rating ?? 0) ? "text-amber-500 fill-amber-500" : "text-amber-200"} 
-                            />
-                          ))}
+                          {[...Array(5)].map((_, i) => {
+                            if (i < Math.floor(product.rating ?? 0)) {
+                              return <Star key={i} size={14} className="text-amber-500 fill-amber-500" />;
+                            }
+                            if (i < (product.rating ?? 0)) {
+                              return <Star key={i} size={14} className="text-amber-500 fill-amber-300" />; // Setengah penuh untuk rating desimal
+                            }
+                            return <Star key={i} size={14} className="text-amber-200" />;
+                          })}
                         </div>
                         <span className="text-sm text-amber-700 ml-2">{product.rating}</span>
                         <span className="text-xs text-amber-500 ml-1">({product.reviews})</span>
@@ -490,9 +495,11 @@ export default function ProductPage() {
                 transition={{ duration: 0.5 }}
                 className="rounded-2xl overflow-hidden shadow-lg relative"
               >
-                <img 
+                <Image 
                   src={selectedProduct.image} 
                   alt={selectedProduct.name}
+                  width={200}
+                  height={300}
                   className="w-full h-64 md:h-80 object-cover"
                 />
                 
@@ -516,13 +523,6 @@ export default function ProductPage() {
                       <p className="text-amber-200 text-lg mb-6">Coming soon to Mozatto!</p>
                       <p className="text-amber-300 italic">Be the first to taste our newest innovation</p>
                       
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="mt-6 bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-6 rounded-lg"
-                      >
-                        Notify Me
-                      </motion.button>
                     </div>
                   </div>
                 )}
@@ -552,56 +552,30 @@ export default function ProductPage() {
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
                 {/* Tab navigation */}
-                <div className="flex border-b border-amber-200 mb-6">
-                  <button
-                    onClick={() => setActiveSection('ingredients')}
-                    className={`py-3 px-5 font-medium text-sm relative ${
-                      activeSection === 'ingredients' 
-                        ? 'text-amber-800 font-bold' 
-                        : 'text-amber-500 hover:text-amber-700'
-                    }`}
-                  >
-                    Ingredients
-                    {activeSection === 'ingredients' && (
-                      <motion.div 
-                        layoutId="activeTab"
-                        className="absolute bottom-0 left-0 right-0 h-1 bg-amber-500"
-                      ></motion.div>
-                    )}
-                  </button>
-                  <button
-                    onClick={() => setActiveSection('description')}
-                    className={`py-3 px-5 font-medium text-sm relative ${
-                      activeSection === 'description' 
-                        ? 'text-amber-800 font-bold' 
-                        : 'text-amber-500 hover:text-amber-700'
-                    }`}
-                  >
-                    Description
-                    {activeSection === 'description' && (
-                      <motion.div 
-                        layoutId="activeTab"
-                        className="absolute bottom-0 left-0 right-0 h-1 bg-amber-500"
-                      ></motion.div>
-                    )}
-                  </button>
-                  <button
-                    onClick={() => setActiveSection('nutrition')}
-                    className={`py-3 px-5 font-medium text-sm relative ${
-                      activeSection === 'nutrition' 
-                        ? 'text-amber-800 font-bold' 
-                        : 'text-amber-500 hover:text-amber-700'
-                    }`}
-                  >
-                    Nutrition
-                    {activeSection === 'nutrition' && (
-                      <motion.div 
-                        layoutId="activeTab"
-                        className="absolute bottom-0 left-0 right-0 h-1 bg-amber-500"
-                      ></motion.div>
-                    )}
-                  </button>
-                </div>
+<div className="border-b border-amber-200 mb-6 overflow-x-auto">
+  <div className="flex w-max sm:w-full">
+    {['ingredients', 'description', 'nutrition'].map((section) => (
+      <button
+        key={section}
+        onClick={() => setActiveSection(section)}
+        className={`py-3 px-4 sm:px-5 font-medium text-sm relative cursor-pointer whitespace-nowrap ${
+          activeSection === section
+            ? 'text-amber-800 font-bold'
+            : 'text-amber-500 hover:text-amber-700'
+        }`}
+      >
+        {section.charAt(0).toUpperCase() + section.slice(1)}
+        {activeSection === section && (
+          <motion.div
+            layoutId="activeTab"
+            className="absolute bottom-0 left-0 right-0 h-1 bg-amber-500"
+          />
+        )}
+      </button>
+    ))}
+  </div>
+</div>
+
                 
                 {/* Tab content */}
                 <AnimatePresence mode="wait">
@@ -701,28 +675,28 @@ export default function ProductPage() {
                         </div>
                       ) : (
                         <>
-                          <h3 className="font-bold text-amber-900 mb-4">Nutrition Facts</h3>
+                         <h3 className="font-bold text-amber-900 mb-4">Nutrition Facts</h3>
                           <div className="bg-amber-50 rounded-lg border border-amber-100 p-4">
                             <div className="space-y-3">
                               <div className="flex justify-between py-2 border-b border-amber-200">
                                 <span className="text-amber-800 font-medium">Calories</span>
-                                <span className="text-amber-700">320 kcal</span>
+                                <span className="text-amber-700">270 kcal</span> {/* Perkiraan kalori untuk porsi per 100g */}
                               </div>
                               <div className="flex justify-between py-2 border-b border-amber-200">
                                 <span className="text-amber-800 font-medium">Total Fat</span>
-                                <span className="text-amber-700">18g</span>
+                                <span className="text-amber-700">12g</span> {/* Perkiraan lemak total */}
                               </div>
                               <div className="flex justify-between py-2 border-b border-amber-200">
                                 <span className="text-amber-800 font-medium">Carbohydrates</span>
-                                <span className="text-amber-700">34g</span>
+                                <span className="text-amber-700">32g</span> {/* Perkiraan karbohidrat */}
                               </div>
                               <div className="flex justify-between py-2 border-b border-amber-200">
                                 <span className="text-amber-800 font-medium">Protein</span>
-                                <span className="text-amber-700">6g</span>
+                                <span className="text-amber-700">6g</span> {/* Perkiraan protein */}
                               </div>
                               <div className="flex justify-between py-2">
                                 <span className="text-amber-800 font-medium">Sodium</span>
-                                <span className="text-amber-700">450mg</span>
+                                <span className="text-amber-700">380mg</span> {/* Perkiraan sodium */}
                               </div>
                             </div>
                             
@@ -823,60 +797,36 @@ export default function ProductPage() {
             variants={textReveal}
             className="text-amber-100 text-lg md:text-xl max-w-2xl mx-auto mb-8 relative z-10"
           >
-            Order now and experience the crispy outside, soft inside, cheesy goodness of Mozatto's potato cheese bread.
+            Order now and experience the crispy outside, soft inside, cheesy goodness of Mozatto&apos;s potato cheese bread.
           </motion.p>
           <motion.div
             variants={fadeIn}
             className="flex flex-col sm:flex-row gap-4 justify-center relative z-10"
           >
-            <motion.button
+            <motion.a
+              href="/contact-us"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-white text-amber-600 font-bold py-3 px-8 rounded-lg shadow-lg flex items-center justify-center"
+              className="bg-white text-amber-600 font-bold py-3 px-8 cursor-pointer rounded-lg shadow-lg flex items-center justify-center"
             >
               <ShoppingBag size={18} className="mr-2" />
               Shop Now
-            </motion.button>
-            <motion.button
+            </motion.a>
+            <motion.a
+              href="/about-us"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="bg-transparent border-2 border-white text-white font-bold py-3 px-8 rounded-lg shadow-md flex items-center justify-center"
+              className="bg-transparent border-2 border-white text-white cursor-pointer font-bold py-3 px-8 rounded-lg shadow-md flex items-center justify-center"
             >
               Learn More
               <ChevronRight size={18} className="ml-2" />
-            </motion.button>
+            </motion.a>
           </motion.div>
         </motion.div>
       </div>
       
       {/* Footer */}
-      <div className="bg-amber-800 text-white py-8 mt-16">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="mb-6 md:mb-0">
-              <h3 className="text-2xl font-bold mb-2">Mozatto</h3>
-              <p className="text-amber-200">Premium Potato Cheese Bread</p>
-            </div>
-            <div className="flex space-x-6">
-              <a href="#" className="text-white hover:text-amber-200 transition-colors">
-                Products
-              </a>
-              <a href="#" className="text-white hover:text-amber-200 transition-colors">
-                About Us
-              </a>
-              <a href="#" className="text-white hover:text-amber-200 transition-colors">
-                Contact
-              </a>
-              <a href="#" className="text-white hover:text-amber-200 transition-colors">
-                Order Online
-              </a>
-            </div>
-          </div>
-          <div className="border-t border-amber-700 mt-6 pt-6 text-center text-amber-300 text-sm">
-            © {new Date().getFullYear()} Mozatto. All rights reserved.
-          </div>
-        </div>
-      </div>
+     <Footer />
     </div>
     </>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, SetStateAction } from 'react';
+import { useState, useEffect, useRef} from 'react';
 import { ChevronDown, Search, MessageSquare, Star, Bookmark, PlusCircle, MinusCircle } from 'lucide-react';
 
 export default function FAQSection() {
@@ -93,6 +93,7 @@ export default function FAQSection() {
   
   // Setup intersection observer
   useEffect(() => {
+    const sectionElement = sectionRef.current; // Store the current ref value in a variable
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -102,16 +103,16 @@ export default function FAQSection() {
       { threshold: 0.2 }
     );
     
-    if (sectionRef.current) {
-      observer.observe(sectionRef.current);
+    if (sectionElement) {
+      observer.observe(sectionElement);
     }
-    
+  
     return () => {
-      if (sectionRef.current) {
-        observer.unobserve(sectionRef.current);
+      if (sectionElement) {
+        observer.unobserve(sectionElement); // Use the stable variable here
       }
     };
-  }, []);
+  }, []);  
   
   const toggleFAQ = (index: number | null) => {
       setActiveIndex(activeIndex === index ? null : index);
@@ -148,7 +149,7 @@ export default function FAQSection() {
             Frequently Asked Questions
           </h2>
           <p className={`text-amber-700 max-w-2xl mx-auto transition-all duration-1000 delay-300 ${isInView ? 'opacity-100' : 'opacity-0'}`}>
-            Everything you need to know about our renowned potato cheese bread. Can't find your answer? Contact our friendly team anytime.
+            Everything you need to know about our renowned potato cheese bread. Can&apos;t find your answer? Contact our friendly team anytime.
           </p>
         </div>
         
@@ -165,7 +166,7 @@ export default function FAQSection() {
                 placeholder="Search questions..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-full border border-amber-200 bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm transition-all"
+                className="w-full pl-10 pr-4 py-3 text-black rounded-full border border-amber-200 bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 shadow-sm transition-all"
               />
             </div>
             
@@ -259,7 +260,7 @@ export default function FAQSection() {
               <p className="text-amber-700 mb-4">Try adjusting your search or category filters.</p>
               <button 
                 onClick={() => {setSearchTerm(''); setSelectedCategory('all');}}
-                className="px-4 py-2 bg-amber-600 text-white rounded-full hover:bg-amber-700 transition-colors"
+                className="px-4 py-2 bg-amber-600 text-white rounded-full cursor-pointer hover:bg-amber-700 transition-colors"
               >
                 Reset filters
               </button>
@@ -275,9 +276,9 @@ export default function FAQSection() {
               <p className="text-amber-100">Our bread experts are ready to help with any questions about our potato cheese bread.</p>
             </div>
             <div className="shrink-0">
-              <button className="bg-white text-amber-600 hover:bg-amber-100 font-medium px-6 py-3 rounded-full shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
+              <a href="/contact-us" className="bg-white text-amber-600 hover:bg-amber-100 font-medium px-6 py-3 rounded-full shadow-md hover:shadow-lg transition-all transform hover:-translate-y-1">
                 Contact Us
-              </button>
+              </a>
             </div>
           </div>
         </div>

@@ -99,14 +99,14 @@ export default function MozattoHeroSection() {
           </div>
           
           <div className="flex flex-col sm:flex-row gap-4 pt-4">
-            <button className="bg-gradient-to-r from-amber-700 to-amber-800 text-white px-8 py-4 rounded-lg flex items-center justify-center group hover:from-amber-800 hover:to-amber-900 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+            <a href="/contact-us" className="bg-gradient-to-r from-amber-700 to-amber-800 text-white px-8 py-4 rounded-lg flex items-center justify-center group hover:from-amber-800 hover:to-amber-900 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">
               Order Now
               <ShoppingBag className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
-            <button className="bg-white bg-opacity-80 backdrop-blur-sm border-2 border-amber-700 text-amber-800 px-8 py-4 rounded-lg flex items-center justify-center group hover:bg-amber-50 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1">
+            </a>
+            <a href="/product" className="bg-white bg-opacity-80 backdrop-blur-sm border-2 border-amber-700 text-amber-800 px-8 py-4 rounded-lg flex items-center justify-center group hover:bg-amber-50 transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1">
               Our Menu
               <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </button>
+            </a>
           </div>
           
           <div className="flex items-center gap-6 pt-6">
