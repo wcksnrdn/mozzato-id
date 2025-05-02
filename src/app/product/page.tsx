@@ -42,7 +42,7 @@ export default function ProductPage() {
     {
       id: 3,
       name: "Tiramissu Potato Cheese Bread",
-      description: "A savory delight featuring a rich blend of roasted garlic and three types of premium cheeses. The combination of smooth mozzarella, sharp parmesan, and creamy cheddar, with the hint of garlic, creates a deep and complex flavor experience.",
+      description: "A sweet and indulgent treat that blends soft potato bread with layers of creamy cheese and a hint of tiramisu flavor...",
       price: "Rp 13,000",
       ingredients: ["Premium Potatoes", "Cheddar Cheese", "Mozzarella Cheese", "Parmesan Cheese", "Roasted Garlic", "Wheat Flour", "Butter", "Salt"],
       image: "/productpageimages/cisbrettiramisu.png",
@@ -552,29 +552,29 @@ export default function ProductPage() {
                 transition={{ duration: 0.5, delay: 0.2 }}
               >
                 {/* Tab navigation */}
-<div className="border-b border-amber-200 mb-6 overflow-x-auto">
-  <div className="flex w-max sm:w-full">
-    {['ingredients', 'description', 'nutrition'].map((section) => (
-      <button
-        key={section}
-        onClick={() => setActiveSection(section)}
-        className={`py-3 px-4 sm:px-5 font-medium text-sm relative cursor-pointer whitespace-nowrap ${
-          activeSection === section
-            ? 'text-amber-800 font-bold'
-            : 'text-amber-500 hover:text-amber-700'
-        }`}
-      >
-        {section.charAt(0).toUpperCase() + section.slice(1)}
-        {activeSection === section && (
-          <motion.div
-            layoutId="activeTab"
-            className="absolute bottom-0 left-0 right-0 h-1 bg-amber-500"
-          />
-        )}
-      </button>
-    ))}
-  </div>
-</div>
+                <div className="border-b border-amber-200 mb-6 overflow-x-auto">
+                  <div className="flex w-max sm:w-full">
+                    {['ingredients', 'description', 'nutrition'].map((section) => (
+                      <button
+                        key={section}
+                        onClick={() => setActiveSection(section)}
+                        className={`py-3 px-4 sm:px-5 font-medium text-sm relative cursor-pointer whitespace-nowrap ${
+                          activeSection === section
+                            ? 'text-amber-800 font-bold'
+                            : 'text-amber-500 hover:text-amber-700'
+                        }`}
+                      >
+                        {section.charAt(0).toUpperCase() + section.slice(1)}
+                        {activeSection === section && (
+                          <motion.div
+                            layoutId="activeTab"
+                            className="absolute bottom-0 left-0 right-0 h-1 bg-amber-500"
+                          />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
                 
                 {/* Tab content */}
