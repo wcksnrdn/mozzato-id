@@ -6,10 +6,17 @@ import Image from 'next/image';
 export default function TestimonialSection() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const [, setMousePosition] = useState({ x: 0, y: 0 });
   const sectionRef = useRef<HTMLDivElement>(null);
   const [isInView, setIsInView] = useState(false);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const carouselRef = useRef<HTMLDivElement>(null);
+
+  const touchStartXRef = useRef(0);
+  const touchEndXRef = useRef(0);
+  const isDraggingRef = useRef(false);
+  const dragStartXRef = useRef(0);
+  const dragOffsetRef = useRef(0);
 
   useEffect(() => {
     const sectionElement = sectionRef.current; // Store the current ref value in a variable
@@ -32,17 +39,6 @@ export default function TestimonialSection() {
       }
     };
   }, []);  
-
-  // Track mouse position for parallax effect
-  const handleMouseMove = (e: { clientX: number; clientY: number; }) => {
-    if (!sectionRef.current) return;
-    
-    const rect = sectionRef.current.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) - 0.5;
-    const y = ((e.clientY - rect.top) / rect.height) - 0.5;
-    
-    setMousePosition({ x, y });
-  };
 
   const testimonials = [
     {
@@ -67,13 +63,13 @@ export default function TestimonialSection() {
     },
     {
       id: 3,
-      name: "Sintia Pratiwi",
+      name: "Felicia",
       role: "Active Student",
       quote: "My family fights over the last piece of Mozatto's potato cheese bread! The subtle herb notes and the way the cheese creates these pockets of flavor is absolutely incredible.",
       rating: 5,
-      imageSrc: "/testimonialsectionimages/sintia.png",
-      socialHandle: "@sinprtw_",
-      location: "Jawa Barat, Indonesia"
+      imageSrc: "/testimonialsectionimages/felicia.png",
+      socialHandle: "@pieddalouette_",
+      location: "Jakarta, Indonesia"
     },
     {
       id: 4,
@@ -109,7 +105,7 @@ export default function TestimonialSection() {
   }, [isHovering, isInView, testimonials.length]); // Add testimonials.length to the dependency array  
 
 
-  // Calculate transformations for 3D carousel effect
+  // Calculate styles for each card based on its position relative to active card
   const calculateCardStyle = (index: number) => {
     const diff = (index - activeIndex + testimonials.length) % testimonials.length;
     let transform = '';
@@ -135,23 +131,104 @@ export default function TestimonialSection() {
       zIndex = 1;
     }
     
-    // Add parallax effect based on mouse position when hovering
-    if (isHovering && diff === 0) {
-      const moveX = mousePosition.x * 15; // Adjust multiplier for effect strength
-      const moveY = mousePosition.y * 10;
-      const rotateX = -mousePosition.y * 10; // Invert for natural feeling
-      const rotateY = mousePosition.x * 10;
+    // Apply drag offset if currently dragging on mobile
+    if (isDraggingRef.current) {
+      // Calculate how much the dragging should affect the card based on its position
+      const dragInfluence = diff === 0 ? 1 : diff === 1 || diff === testimonials.length - 1 ? 0.5 : 0.25;
+      const dragAmount = dragOffsetRef.current * dragInfluence;
       
-      transform += ` translate3d(${moveX}px, ${moveY}px, 0) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+      // Apply the drag offset to the current transform
+      const match = transform.match(/translateX\([^)]+\)/);
+      if (match && match[0]) {
+        transform = transform.replace(/translateX\([^)]+\)/, `translateX(calc(${dragAmount}px + ${match[0]}))`);
+      }
     }
     
     return {
       transform,
       opacity,
       zIndex,
-      transition: 'all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)'
+      transition: isDraggingRef.current ? 'none' : 'all 0.7s cubic-bezier(0.34, 1.56, 0.64, 1)'
     };
   };
+
+  // Handle touch start
+  const handleTouchStart = (e: React.TouchEvent<HTMLDivElement>) => {
+    touchStartXRef.current = e.touches[0].clientX;
+    isDraggingRef.current = true;
+    dragStartXRef.current = e.touches[0].clientX;
+    dragOffsetRef.current = 0;
+  };
+  
+  // Handle touch move (dragging)
+  const handleTouchMove = (e: React.TouchEvent<HTMLDivElement>) => {
+    if (!isDraggingRef.current) return;
+    
+    const currentX = e.touches[0].clientX;
+    touchEndXRef.current = currentX;
+    
+    // Calculate drag distance
+    dragOffsetRef.current = currentX - dragStartXRef.current;
+    
+    // Force re-render to apply drag offset
+    forceUpdate();
+  };
+  
+  // Handle touch end
+  const handleTouchEnd = () => {
+    isDraggingRef.current = false;
+    dragOffsetRef.current = 0;
+    
+    // Calculate swipe direction and distance
+    const swipeDistance = touchEndXRef.current - touchStartXRef.current;
+    const minSwipeDistance = 50; // Minimum distance to consider it a swipe
+    
+    if (Math.abs(swipeDistance) > minSwipeDistance) {
+      // Swipe right (previous)
+      if (swipeDistance > 0 && activeIndex > 0) {
+        setActiveIndex(activeIndex - 1);
+      }
+      // Swipe left (next)
+      else if (swipeDistance < 0 && activeIndex < testimonials.length - 1) {
+        setActiveIndex(activeIndex + 1);
+      }
+    }
+    
+    // Reset for next swipe
+    touchStartXRef.current = 0;
+    touchEndXRef.current = 0;
+  };
+  
+  // Force a component update
+  const [, updateState] = useState({});
+  const forceUpdate = () => updateState({});
+  
+  // Navigation buttons
+  const goToPrevious = () => {
+    if (activeIndex > 0) {
+      setActiveIndex(activeIndex - 1);
+    }
+  };
+  
+  const goToNext = () => {
+    if (activeIndex < testimonials.length - 1) {
+      setActiveIndex(activeIndex + 1);
+    }
+  };
+  
+  // Mouse position tracking for parallax effect on desktop
+  const handleMouseMove = (e: { clientX: number; clientY: number; }) => {
+    if (!carouselRef.current) return;
+    
+    const rect = carouselRef.current.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1; // -1 to 1
+    const y = ((e.clientY - rect.top) / rect.height) * 2 - 1; // -1 to 1
+    
+    setMousePosition({ x, y });
+  };
+  
+  const handleMouseEnter = () => setIsHovering(true);
+  const handleMouseLeave = () => setIsHovering(false);
 
   return (
     <section 
@@ -207,85 +284,136 @@ export default function TestimonialSection() {
         
         {/* 3D Carousel Testimonial Display */}
         <div className="relative h-96 md:h-120 mb-16 perspective-1000">
-          <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-amber-200/30 to-transparent rounded-full blur-2xl max-w-4xl mx-auto"></div>
-          
-          {/* Testimonial cards with 3D rotation */}
-          <div className="relative h-full max-w-5xl mx-auto">
-            {testimonials.map((testimonial, index) => (
-              <div
-                key={testimonial.id}
-                ref={el => { cardRefs.current[index] = el; }}
-                className="absolute top-0 left-0 right-0 mx-auto w-full max-w-md cursor-pointer"
-                style={calculateCardStyle(index)}
-                onClick={() => setActiveIndex(index)}
-              >
-                <div className="bg-white rounded-2xl shadow-2xl z-20 overflow-hidden border border-amber-200 h-full transform transition-transform hover:scale-102">
-                  {/* Card Header with image and glow effect */}
-                  <div className="relative h-32 bg-gradient-to-r from-amber-400 to-amber-300 p-6 overflow-hidden">
-                    <div className="absolute -top-12 -right-12 w-40 h-40 bg-white opacity-20 rounded-full"></div>
-                    <div className="absolute -bottom-40 -left-20 w-80 h-80 bg-amber-200 opacity-30 rounded-full"></div>
-                    
-                    <div className="absolute bottom-0 right-6 transform translate-y-1/2">
-                      <div className="relative">
-                        <div className="absolute inset-0 rounded-full bg-amber-200 blur-md opacity-20 scale-110"></div>
-                        <Image 
-                          src={testimonial.imageSrc} 
-                          alt={testimonial.name}
-                          width={200}
-                          height={300}
-                          className="w-20 h-20 rounded-full border-4 border-white -mt-24 object-cover shadow-lg z-50"
-                        />
-                      </div>
-                    </div>
-                    
-                    {/* Quotation mark */}
-                    <div className="absolute top-4 left-4 text-amber-100 opacity-50">
-                      <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
-                        <path d="M6.5 10c-.223 0-.437.034-.65.065.069-.232.14-.468.254-.68.114-.308.292-.575.469-.844.148-.291.409-.488.601-.737.201-.242.475-.403.692-.604.213-.21.492-.315.714-.463.232-.133.434-.28.65-.35.208-.086.39-.16.539-.222.302-.125.474-.197.474-.197L9.758 4.03c0 0-.218.052-.597.144C8.97 4.222 8.737 4.278 8.472 4.345c-.271.05-.56.187-.882.312C7.272 4.799 6.904 4.895 6.562 5.123c-.344.218-.741.4-1.091.692-.339.301-.748.562-1.05.945-.33.358-.656.734-.909 1.162C3.249 8.318 3.05 8.779 2.9 9.233c-.136.474-.273.926-.313 1.396-.034.522-.005 1.034.076 1.506.125.557.257 1.125.519 1.596.335.621.762 1.191 1.413 1.612.708.401 1.636.651 2.568.612.817.003 1.641-.223 2.256-.765.613-.511 1.031-1.257 1.093-2.112.045-.534-.08-1.081-.377-1.561C9.833 10.136 9.219 10 8.69 10H6.5zm9.5 0c-.223 0-.437.034-.65.065.069-.232.14-.468.254-.68.114-.308.292-.575.469-.844.148-.291.409-.488.601-.737.201-.242.475-.403.692-.604.213-.21.492-.315.714-.463.232-.133.434-.28.65-.35.208-.086.39-.16.539-.222.302-.125.474-.197.474-.197L19.758 4.03c0 0-.218.052-.597.144-.191.048-.424.104-.689.171-.271.05-.56.187-.882.312-.317.143-.686.238-1.028.467-.344.218-.741.4-1.091.692-.339.301-.748.562-1.05.945-.33.358-.656.734-.909 1.162-.242.408-.44.869-.59 1.323-.136.474-.273.926-.313 1.396-.034.522-.005 1.034.076 1.506.125.557.257 1.125.519 1.596.335.621.762 1.191 1.413 1.612.708.401 1.636.651 2.568.612.817.003 1.641-.223 2.256-.765.613-.511 1.031-1.257 1.093-2.112.045-.534-.08-1.081-.377-1.561C19.833 10.136 19.219 10 18.69 10H16.5z" />
-                      </svg>
+        <div className="absolute inset-x-0 bottom-0 h-1/2 bg-gradient-to-t from-amber-200/30 to-transparent rounded-full blur-2xl max-w-4xl mx-auto"></div>
+        
+        {/* Touch event container with mouse events for desktop */}
+        <div 
+          ref={carouselRef}
+          className="relative h-full max-w-5xl mx-auto touch-pan-y"
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+          onMouseMove={handleMouseMove}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          {testimonials.map((testimonial, index) => (
+            <div
+              key={testimonial.id}
+              ref={el => { cardRefs.current[index] = el; }}
+              className="absolute top-0 left-0 right-0 mx-auto w-full max-w-md cursor-pointer"
+              style={calculateCardStyle(index)}
+              onClick={() => !isDraggingRef.current && setActiveIndex(index)}
+            >
+              <div className="bg-white rounded-2xl shadow-2xl z-20 overflow-hidden border border-amber-200 h-full transform transition-transform hover:scale-102">
+                {/* Card Header with image and glow effect */}
+                <div className="relative h-32 bg-gradient-to-r from-amber-400 to-amber-300 p-6 overflow-hidden">
+                  <div className="absolute -top-12 -right-12 w-40 h-40 bg-white opacity-20 rounded-full"></div>
+                  <div className="absolute -bottom-40 -left-20 w-80 h-80 bg-amber-200 opacity-30 rounded-full"></div>
+                  
+                  <div className="absolute bottom-0 right-6 transform translate-y-1/2">
+                    <div className="relative">
+                      <div className="absolute inset-0 rounded-full bg-amber-200 blur-md opacity-20 scale-110"></div>
+                      <Image 
+                        src={testimonial.imageSrc} 
+                        alt={testimonial.name}
+                        width={200}
+                        height={300}
+                        className="w-20 h-20 rounded-full border-4 border-white -mt-24 object-cover shadow-lg z-50"
+                      />
                     </div>
                   </div>
                   
-                  {/* Card Body */}
-                  <div className="p-6 pt-12 z-10">
-                    <div className="mb-4 z-10">
-                      {/* Star Rating */}
-                      <div className="flex mb-2 z-10">
-                        {[...Array(5)].map((_, i) => (
-                          <svg key={i} className="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                        ))}
-                      </div>
-                      
-                      {/* Quote */}
-                      <p className="text-amber-800 italic text-lg leading-relaxed mb-6">{testimonial.quote}</p>
-                      
-                      {/* Author */}
-                      <div className="flex items-center justify-between">
-                        <div>
-                          <h4 className="font-semibold text-amber-900">{testimonial.name}</h4>
-                          <div className="flex items-center text-amber-600 text-sm">
-                            <span>{testimonial.role}</span>
-                            <span className="mx-2">•</span>
-                            <span>{testimonial.location}</span>
-                          </div>
-                        </div>
-                        
-                        <div className="text-amber-500 text-sm font-medium">
-                          {testimonial.socialHandle}
-                        </div>
-                      </div>
-                    </div>
+                  {/* Quotation mark */}
+                  <div className="absolute top-4 left-4 text-amber-100 opacity-50">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M6.5 10c-.223 0-.437.034-.65.065.069-.232.14-.468.254-.68.114-.308.292-.575.469-.844.148-.291.409-.488.601-.737.201-.242.475-.403.692-.604.213-.21.492-.315.714-.463.232-.133.434-.28.65-.35.208-.086.39-.16.539-.222.302-.125.474-.197.474-.197L9.758 4.03c0 0-.218.052-.597.144C8.97 4.222 8.737 4.278 8.472 4.345c-.271.05-.56.187-.882.312C7.272 4.799 6.904 4.895 6.562 5.123c-.344.218-.741.4-1.091.692-.339.301-.748.562-1.05.945-.33.358-.656.734-.909 1.162C3.249 8.318 3.05 8.779 2.9 9.233c-.136.474-.273.926-.313 1.396-.034.522-.005 1.034.076 1.506.125.557.257 1.125.519 1.596.335.621.762 1.191 1.413 1.612.708.401 1.636.651 2.568.612.817.003 1.641-.223 2.256-.765.613-.511 1.031-1.257 1.093-2.112.045-.534-.08-1.081-.377-1.561C9.833 10.136 9.219 10 8.69 10H6.5zm9.5 0c-.223 0-.437.034-.65.065.069-.232.14-.468.254-.68.114-.308.292-.575.469-.844.148-.291.409-.488.601-.737.201-.242.475-.403.692-.604.213-.21.492-.315.714-.463.232-.133.434-.28.65-.35.208-.086.39-.16.539-.222.302-.125.474-.197.474-.197L19.758 4.03c0 0-.218.052-.597.144-.191.048-.424.104-.689.171-.271.05-.56.187-.882.312-.317.143-.686.238-1.028.467-.344.218-.741.4-1.091.692-.339.301-.748.562-1.05.945-.33.358-.656.734-.909 1.162-.242.408-.44.869-.59 1.323-.136.474-.273.926-.313 1.396-.034.522-.005 1.034.076 1.506.125.557.257 1.125.519 1.596.335.621.762 1.191 1.413 1.612.708.401 1.636.651 2.568.612.817.003 1.641-.223 2.256-.765.613-.511 1.031-1.257 1.093-2.112.045-.534-.08-1.081-.377-1.561C19.833 10.136 19.219 10 18.69 10H16.5z" />
+                    </svg>
                   </div>
-                  
-                  {/* Bottom accent */}
-                  <div className="h-2 bg-gradient-to-r from-amber-400 to-amber-300"></div>
                 </div>
+                
+                {/* Card Body */}
+                <div className="p-6 pt-12 z-10">
+                  <div className="mb-4 z-10">
+                    {/* Star Rating */}
+                    <div className="flex mb-2 z-10">
+                      {[...Array(5)].map((_, i) => (
+                        <svg key={i} className="w-5 h-5 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+                          <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                        </svg>
+                      ))}
+                    </div>
+                    
+                    {/* Quote */}
+                    <p className="text-amber-800 italic text-lg leading-relaxed mb-6">{testimonial.quote}</p>
+                    
+                    {/* Author */}
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h4 className="font-semibold text-amber-900">{testimonial.name}</h4>
+                        <div className="flex items-center text-amber-600 text-sm">
+                          <span>{testimonial.role}</span>
+                          <span className="mx-2">•</span>
+                          <span>{testimonial.location}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="text-amber-500 text-sm font-medium">
+                        {testimonial.socialHandle}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Bottom accent */}
+                <div className="h-2 bg-gradient-to-r from-amber-400 to-amber-300"></div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
+        
+        {/* Navigation indicators */}
+        <div className="mt-8 flex justify-center space-x-2">
+          {testimonials.map((_, index) => (
+            <button
+              key={`indicator-${index}`}
+              className={`w-2 h-2 rounded-full ${activeIndex === index ? 'bg-amber-500' : 'bg-amber-200'}`}
+              onClick={() => setActiveIndex(index)}
+              aria-label={`Go to testimonial ${index + 1}`}
+            />
+          ))}
+        </div>
+        
+        {/* Navigation arrows - only visible on desktop */}
+        <div className="hidden md:block">
+          <button
+            onClick={goToPrevious}
+            disabled={activeIndex === 0}
+            className={`absolute top-1/2 left-4 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-lg z-50 ${activeIndex === 0 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-amber-50'}`}
+            aria-label="Previous testimonial"
+          >
+            <svg className="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+          </button>
+          
+          <button
+            onClick={goToNext}
+            disabled={activeIndex === testimonials.length - 1}
+            className={`absolute top-1/2 right-4 transform -translate-y-1/2 bg-white rounded-full p-2 shadow-lg z-50 ${activeIndex === testimonials.length - 1 ? 'opacity-30 cursor-not-allowed' : 'hover:bg-amber-50'}`}
+            aria-label="Next testimonial"
+          >
+            <svg className="w-6 h-6 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </button>
+        </div>
+        
+        {/* Mobile swipe hint - only visible on small screens */}
+        <div className="md:hidden text-center mt-4 text-amber-600 text-sm">
+          <span>← Geser untuk melihat lebih banyak testimonial →</span>
+        </div>
+      </div>
         
         {/* Navigation dots */}
         <div className="flex justify-center items-center gap-3">
